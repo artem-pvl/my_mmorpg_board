@@ -1,0 +1,30 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Объявление
+{% endblock title %}
+
+{% block content %}
+    <h1>{{ ad.header }}</h1>
+
+    {% comment %} {% load account %} {% endcomment %}
+
+    <h5>{{ ad.category_id }}</h5>
+    {% comment %} <h5>
+    {% for cat in category %}
+        <div>
+            <a href="{% url 'category' cat.category %}">{{ cat.category__category }}</a>
+            {% if user.is_authenticated %}
+                {% if cat.category not in subscribed %}
+                    | <button><a href="{% url 'subscribe_category' cat.category %}">{% translate "Subscribe" %}</a></button>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% endfor %}
+    </h5> {% endcomment %}
+
+    <h6>{{ ad.creation_time|date:'d.m.Y G:i' }}</h6>
+    <p>{{ ad.ad }}</p>
+    <h6>Автор: {{ ad.user_id }}</h6>
+    <hr>
+{% endblock content %}
