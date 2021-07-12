@@ -22,7 +22,8 @@ class AdDetail(DetailView):
 
 class AdCreate(CreateView):
     model = Ad
-    template_name = ''
+    fields = ['category_id', 'header', 'ad']
+    template_name = 'ad_create.html'
     context_object_name = 'ad_create'
 
 
