@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib import auth
 
+from ckeditor_uploader.fields import RichTextUploadingField
+
 # Create your models here
 
 
@@ -16,7 +18,7 @@ class Ad(models.Model):
                                 on_delete=models.CASCADE)
     category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
     header = models.CharField(max_length=255)
-    ad = models.TextField(default='')
+    ad = RichTextUploadingField(default='')
     creation_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
