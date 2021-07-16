@@ -7,25 +7,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title></title>
+        <title>
+            {% block head_title %}
+            {% endblock head_title %}
+        </title>
     </head>
     <body>
-        {% block title %}
-        {% endblock title %}
-
-        {% block head_title %}
-        {% endblock head_title %}
-
-        {% block extra_head %}
-        {% endblock extra_head %}
-
         {% block body %}
-            {% block content %}
-                {{ flatpage.content }}
-            {% endblock content %}
+            {{ flatpage.content }}
         {% endblock body %}
-
-        {% block extra_body %}
-        {% endblock extra_body %}
     </body>
 </html>

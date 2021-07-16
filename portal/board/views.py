@@ -25,18 +25,22 @@ class AdCreate(CreateView):
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
     context_object_name = 'ad_create'
+    success_url = '/board/'
 
 
 class AdEdit(UpdateView):
     model = Ad
-    template_name = ''
+    fields = ['category_id', 'header', 'ad']
+    template_name = 'ad_create.html'
     context_object_name = 'ad_edit'
+    success_url = '/board/'
 
 
 class AdDelete(DeleteView):
     model = Ad
-    template_name = ''
+    template_name = 'ad_delete.html'
     context_object_name = 'ad_delete'
+    success_url = '/board/'
 
 
 class ReplyList(ListView):

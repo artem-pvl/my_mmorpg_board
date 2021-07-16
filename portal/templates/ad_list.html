@@ -1,11 +1,11 @@
 {% extends 'flatpages/default.html' %}
 
-{% block title %}
+{% block head_title %}
 Объявления
 {{ ads|length }}
-{% endblock title %}
+{% endblock head_title %}
 
-{% block content %}
+{% block body %}
     <h1>Все объявления</h1>
     <hr>
 
@@ -72,4 +72,4 @@
         <h2>Нет объявлений!</h2>
     {% endif %}
 
-{% endblock content %}
+{% endblock body %}

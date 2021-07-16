@@ -1,11 +1,11 @@
 {% extends 'flatpages/default.html' %}
 {% load static %}
 
-{% block title %}
+{% block head_title %}
 Объявление
-{% endblock title %}
+{% endblock head_title %}
 
-{% block content %}
+{% block body %}
     <h1>Редактирование объявления</h1>
     <hr>
     <form>
@@ -14,4 +14,4 @@
         {{ form.as_p }}
         <input type="submit" value="Сохранить изменения">
     </form>
-{% endblock content %}
+{% endblock body %}

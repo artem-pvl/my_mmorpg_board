@@ -1,10 +1,10 @@
 {% extends 'flatpages/default.html' %}
 
-{% block title %}
+{% block head_title %}
 Объявление
-{% endblock title %}
+{% endblock head_title %}
 
-{% block content %}
+{% block body %}
     <h1>{{ ad.header }}</h1>
 
     {% comment %} {% load account %} {% endcomment %}
@@ -27,4 +27,4 @@
     <p>{{ ad.ad }}</p>
     <h6>Автор: {{ ad.user_id }}</h6>
     <hr>
-{% endblock content %}
+{% endblock body %}
