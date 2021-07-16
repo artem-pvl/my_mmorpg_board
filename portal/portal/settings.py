@@ -14,6 +14,8 @@ from pathlib import Path
 from os import path
 import tempfile
 
+from ckeditor.configs import DEFAULT_CONFIG
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -144,8 +146,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CKEditor
 
-from ckeditor.configs import DEFAULT_CONFIG
-
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_THUMBNAIL_SIZE = (300, 300)
@@ -214,3 +214,12 @@ CKEDITOR_CONFIGS = {
         "codeSnippet_theme": "xcode",
     },
 }
+
+
+# Celery
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
