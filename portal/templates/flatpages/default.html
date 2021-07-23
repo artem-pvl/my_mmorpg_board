@@ -1,4 +1,5 @@
 {% load static %}
+{% load account %}
 
 <!DOCTYPE html>
 <html>
@@ -11,8 +12,31 @@
             {% block head_title %}
             {% endblock head_title %}
         </title>
+        {% block extra_head %}
+        {% endblock extra_head %}
     </head>
     <body>
+        <nav>
+            <div><a href="{% url 'ad_list_view' %}">Главная</a></div>
+            {% if user.is_authenticated %}
+                <div><a href="{% url 'ad_create_view' %}">Новое объявление</a></div>
+            {% endif %}
+        </nav>
+        <nav>
+            {% if user.is_authenticated %}
+                <div><a href="{% url 'ad_list_view' %}">Мои объявления</a></div>
+                <div><a href="{% url 'account_email' %}">Изменить адрес почты</a></div>
+                <div><a href="{% url 'account_logout' %}">Выйти</a></div>
+                <div>{% user_display user %}</div>
+            {% else %}
+                <div><a href="{% url 'account_login' %}">Войти</a></div>
+                <div><a href="{% url 'account_signup' %}">Зарегистрироваться</a></div>
+            {% endif %}
+        </nav>
+        <nav>
+            {% block menu2 %}
+            {% endblock menu2 %}
+        </nav>
         {% block body %}
             {{ flatpage.content }}
         {% endblock body %}
