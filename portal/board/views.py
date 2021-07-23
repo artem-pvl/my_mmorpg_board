@@ -62,10 +62,17 @@ class ReplyList(ListView):
     ordering = '-creation_time'
 
 
-class ReplyCreate(CreateView):
+class ReplyCreate(LoginRequiredMixin, CreateView):
     model = Reply
-    template_name = ''
+    template_name = 'reply_create.html'
+    fields = ['reply']
     context_object_name = 'reply_create'
+    success_url = '/board/'
+
+    def form_valid(self, form):
+        form.instance.user_id = self.request.user
+        form.instance.ad_id = Ad.objects.get(id=self.kwargs['ad_id'])
+        return super().form_valid(form)
 
 
 class ReplyEdit(UpdateView):
