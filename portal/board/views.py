@@ -1,10 +1,7 @@
-from django.contrib.auth.models import User
-from django.http.request import QueryDict
 from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
     DeleteView
 
 from .models import Ad, Reply
-from .forms import RegisterUserForm
 
 # from django.shortcuts import render
 
@@ -68,9 +65,3 @@ class ReplyEdit(UpdateView):
     model = Reply
     template_name = ''
     context_object_name = 'reply_edit'
-
-
-class RegisterUser(CreateView):
-    model = User
-    form_class = RegisterUserForm
-    success_url = '/board'

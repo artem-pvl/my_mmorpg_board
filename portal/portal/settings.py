@@ -16,6 +16,8 @@ import tempfile
 
 from ckeditor.configs import DEFAULT_CONFIG
 
+from .secret import EMAIL_FOR_SEND, EMAIL_FOR_SEND_PASS
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,6 +46,11 @@ INSTALLED_APPS = [
 
     'django.contrib.sites',
     'django.contrib.flatpages',
+
+    # allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
     'board',
     'ckeditor',
@@ -77,6 +84,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # allauth
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -128,6 +138,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATH = [
+    path.join(BASE_DIR, 'locale')
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -216,6 +229,20 @@ CKEDITOR_CONFIGS = {
 }
 
 
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/board/'
+LOGOUT_REDIRECT_URL = '/board/'
+
+
+# e-mail for sending
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = EMAIL_FOR_SEND
+EMAIL_HOST_PASSWORD = EMAIL_FOR_SEND_PASS
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 # Celery
 
 CELERY_BROKER_URL = 'redis://localhost:6379'
@@ -223,3 +250,23 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+# allauth
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGOUT_REDIRECT_URL = '/board/'
