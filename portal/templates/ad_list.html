@@ -14,6 +14,9 @@
             <thead>
                 <tr>
                     <td>
+                        Заголовок
+                    </td>
+                    <td>
                         Автор
                     </td>
                     <td>
@@ -23,15 +26,15 @@
                         Время создания
                     </td>
                     <td>
-                        Заголовок
-                    </td>
-                    <td>
                         Объявление
                     </td>
                 </tr>
             </thead>
             {% for ad in ads %}
                 <tr>
+                    <td>
+                        <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header|truncatechars:50 }}</a>
+                    </td>
                     <td>
                         {{ ad.user_id }}
                     </td>
@@ -41,9 +44,6 @@
                     </td>
                     <td>
                         {{ ad.creation_time|date:'d.m.Y G:i' }}
-                    </td>
-                    <td>
-                        <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header|truncatechars:50 }}</a>
                     </td>
                     <td>
                         {{ ad.ad|truncatewords:10 }}
