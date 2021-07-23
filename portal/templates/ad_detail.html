@@ -18,6 +18,11 @@
         <div>
             <button><a href="{% url 'reply_create_view' ad.id %}">Отозваться</a></button>
         </div>
+        {% if user.id == ad.user_id.id %}
+            <div>
+                <button><a href="{% url 'ad_edit_view' ad.id %}">Редактировать</a></button>
+            </div>
+        {% endif %}
     {% endif %}
     <hr>
 
