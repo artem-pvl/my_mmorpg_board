@@ -1,7 +1,10 @@
 from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
     DeleteView
+from django.urls import reverse
 
 from .models import Ad, Reply
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # from django.shortcuts import render
 
@@ -25,12 +28,16 @@ class AdDetail(DetailView):
         return context
 
 
-class AdCreate(CreateView):
+class AdCreate(LoginRequiredMixin, CreateView):
     model = Ad
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
     context_object_name = 'ad_create'
     success_url = '/board/'
+
+    def form_valid(self, form):
+        form.instance.user_id = self.request.user
+        return super().form_valid(form)
 
 
 class AdEdit(UpdateView):
