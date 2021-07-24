@@ -42,7 +42,7 @@ class AdFiltered(LoginRequiredMixin, ListView):
             queryset=Ad.objects.filter(user_id=self.request.user)
         )
         context['reply_list'] = Reply.objects.filter(
-            ad_id=Ad.objects.filter(user_id=self.request.user)
+            ad_id__in=Ad.objects.filter(user_id=self.request.user)
         )
         return context
 

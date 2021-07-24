@@ -34,16 +34,15 @@
                 {{ ad.ad|truncatewords:10 }}
             </p>
             <hr>
-            {{ reply_list }}
-            {% comment %} {% if reply_list %}
+            {% if reply_list %}
                 {% for reply in reply_list %}
-                    {% if reply.ad_id == ad.id %}
+                    {% if reply.ad_id.id == ad.id %}
                         <p>
                             {{ reply.reply }}
                         </p>
                     {% endif %}
                 {% endfor %}
-            {% endif %} {% endcomment %}
+            {% endif %}
         {% endfor %}
         {% comment %} {% if is_paginated %}
             {% if page_obj.has_previous %}
