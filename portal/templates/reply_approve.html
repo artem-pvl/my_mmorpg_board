@@ -12,7 +12,7 @@
     <p>{{ reply.reply }}</p>
     <h6>Автор: {{ reply.user_id.email }}</h6>
     {% if user.is_authenticated %}
-        {% if user.id == reply.user_id.id %}
+        {% if user.id == reply.ad_id.user_id.id %}
             <div>
                 <button><a href="{% url 'reply_approve_button' reply.id %}">Подтвердить</a></button>
             </div>

@@ -22,6 +22,9 @@
             <div>
                 <button><a href="{% url 'ad_edit_view' ad.id %}">Редактировать</a></button>
             </div>
+            <div>
+                <button><a href="{% url 'ad_delete_view' ad.id %}">Удалить</a></button>
+            </div>
         {% endif %}
     {% endif %}
     <hr>
