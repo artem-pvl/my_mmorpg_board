@@ -35,7 +35,7 @@
                 {{ ad_delete.header|truncatechars:50 }}
             </td>
             <td>
-                {{ ad_delete.ad|truncatewords:10 }}
+                {{ ad_delete.ad|safe|truncatewords:10 }}
             </td>
         </tr>
     </table>

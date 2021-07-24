@@ -24,6 +24,6 @@
     <h3>{{ reply.ad_id.header }}</h3>
     <h3>Автор: {{ reply.ad_id.user_id.email }}</h3>
     <h6>{{ reply.ad_id.creation_time|date:'d.m.Y G:i' }}</h6>
-    <p>{{ reply.ad_id.ad }}</p>
+    <p>{{ reply.ad_id.ad|safe }}</p>
 
 {% endblock body %}

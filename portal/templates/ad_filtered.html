@@ -32,7 +32,7 @@
                 {{ ad.creation_time|date:'d.m.Y G:i' }}
             </p>
             <p>
-                {{ ad.ad|truncatewords:10 }}
+                {{ ad.ad|safe|truncatewords:10 }}
             </p>
 
             {% if reply_list %}

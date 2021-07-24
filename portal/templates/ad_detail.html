@@ -12,7 +12,7 @@
     <h5>{{ ad.category_id }}</h5>
 
     <h6>{{ ad.creation_time|date:'d.m.Y G:i' }}</h6>
-    <p>{{ ad.ad }}</p>
+    <p>{{ ad.ad|safe }}</p>
     <h6>Автор: {{ ad.user_id.email }}</h6>
     {% if user.is_authenticated %}
         <div>
