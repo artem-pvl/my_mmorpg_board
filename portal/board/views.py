@@ -1,11 +1,11 @@
 from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
     DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
 from .models import Ad, Reply
 from .filters import AdFilter
-
-from django.contrib.auth.mixins import LoginRequiredMixin
-# from django.contrib.auth.decorators import login_required
 
 # from django.shortcuts import render
 
@@ -25,7 +25,9 @@ class AdDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['reply_list'] = Reply.objects.filter(ad_id=self.kwargs['pk'])
+        context['reply_list'] = Reply.objects.filter(
+            ad_id=self.kwargs['pk'], is_approved=True
+        )
         return context
 
 
@@ -59,7 +61,7 @@ class AdCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class AdEdit(UpdateView):
+class AdEdit(LoginRequiredMixin, UpdateView):
     model = Ad
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
@@ -67,18 +69,27 @@ class AdEdit(UpdateView):
     success_url = '/board/'
 
 
-class AdDelete(DeleteView):
+class AdDelete(LoginRequiredMixin, DeleteView):
     model = Ad
     template_name = 'ad_delete.html'
     context_object_name = 'ad_delete'
     success_url = '/board/'
 
 
-class ReplyList(ListView):
+class ReplyConfirmApprove(LoginRequiredMixin, DetailView):
     model = Reply
-    template_name = ''
-    context_object_name = 'reply_list'
-    ordering = '-creation_time'
+    template_name = "reply_approve.html"
+    context_object_name = 'reply'
+
+
+@login_required
+def approve_reply(request, pk):
+    reply = Reply.objects.get(id=pk)
+    if request.user.id == reply.ad_id.user_id.id:
+        reply.is_approved = True
+        reply.save()
+
+    return redirect('/board/ad/filtered')
 
 
 class ReplyCreate(LoginRequiredMixin, CreateView):
@@ -92,12 +103,6 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
         form.instance.user_id = self.request.user
         form.instance.ad_id = Ad.objects.get(id=self.kwargs['ad_id'])
         return super().form_valid(form)
-
-
-class ReplyEdit(UpdateView):
-    model = Reply
-    template_name = ''
-    context_object_name = 'reply_edit'
 
 
 class ReplyDelete(LoginRequiredMixin, DeleteView):

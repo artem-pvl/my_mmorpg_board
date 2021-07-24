@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import AdFiltered, AdList, AdDetail, AdCreate, AdEdit, AdDelete,\
-    ReplyCreate, ReplyDelete
+    ReplyCreate, ReplyDelete, ReplyConfirmApprove, approve_reply
 
 urlpatterns = [
     path('', AdList.as_view(), name='ad_list_view'),
@@ -13,4 +13,8 @@ urlpatterns = [
          name='reply_create_view'),
     path('reply/<int:pk>/delete', ReplyDelete.as_view(),
          name='reply_delete_view'),
+    path('reply/<int:pk>/approve', ReplyConfirmApprove.as_view(),
+         name='reply_approve_view'),
+    path('reply/<int:pk>/approve_confirm', approve_reply,
+         name='reply_approve_button'),
 ]

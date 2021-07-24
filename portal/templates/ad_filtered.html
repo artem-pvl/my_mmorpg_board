@@ -34,7 +34,6 @@
             <p>
                 {{ ad.ad|truncatewords:10 }}
             </p>
-            <hr>
             {% if reply_list %}
                 <table>
                 {% for reply in reply_list %}
@@ -43,7 +42,7 @@
                             <td>
                                 {% if not reply.is_approved %}
                                     <div>
-                                        <button><a href="{% url 'ad_edit_view' ad.id %}">Подтвердить</a></button>
+                                        <button><a href="{% url 'reply_approve_view' reply.id %}">Подтвердить</a></button>
                                     </div>
                                 {% endif %}
                             </td>
@@ -68,6 +67,7 @@
                 {% endfor %}
                 </table>
             {% endif %}
+            <hr>
         {% endfor %}
         {% comment %} {% if is_paginated %}
             {% if page_obj.has_previous %}
