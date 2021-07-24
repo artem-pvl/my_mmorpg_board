@@ -35,3 +35,7 @@ class Reply(models.Model):
 
     def __str__(self):
         return self.reply
+
+
+def return_user_email(user):
+    return user.email

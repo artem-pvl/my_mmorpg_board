@@ -13,7 +13,7 @@
 
     <h6>{{ ad.creation_time|date:'d.m.Y G:i' }}</h6>
     <p>{{ ad.ad }}</p>
-    <h6>Автор: {{ ad.user_id }}</h6>
+    <h6>Автор: {{ ad.user_id.email }}</h6>
     {% if user.is_authenticated %}
         <div>
             <button><a href="{% url 'reply_create_view' ad.id %}">Отозваться</a></button>
@@ -44,7 +44,7 @@
             {% for reply in reply_list %}
                 <tr>
                     <td>
-                        {{ reply.user_id }}
+                        {{ reply.user_id.email }}
                     </td>
                     <td>
                         {{ reply.creation_time|date:'d.m.Y G:i' }}

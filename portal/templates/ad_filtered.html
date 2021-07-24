@@ -9,8 +9,9 @@
 {% endblock head_title %}
 
 {% block body %}
-    <h1>Фильтр объявлений</h1>
+    <h1>Мои объявления</h1>
 
+    <h2>Фильтр объявлений</h2>
     <form method="GET">
         {{ filter.form }}
         <input type="submit" value="Найти">
@@ -35,13 +36,37 @@
             </p>
             <hr>
             {% if reply_list %}
+                <table>
                 {% for reply in reply_list %}
                     {% if reply.ad_id.id == ad.id %}
-                        <p>
-                            {{ reply.reply }}
-                        </p>
+                        <tr>
+                            <td>
+                                {% if not reply.is_approved %}
+                                    <div>
+                                        <button><a href="{% url 'ad_edit_view' ad.id %}">Подтвердить</a></button>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ reply.user_id.email }}
+                            </td>
+                            <td>
+                                {{ reply.creation_time }}
+                            </td>
+                            <td>
+                                {{ reply.reply }}
+                            </td>
+                            <td>
+                                {% if not reply.is_approved %}
+                                    <div>
+                                        <button><a href="{% url 'reply_delete_view' reply.id %}">Удалить</a></button>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
                     {% endif %}
                 {% endfor %}
+                </table>
             {% endif %}
         {% endfor %}
         {% comment %} {% if is_paginated %}

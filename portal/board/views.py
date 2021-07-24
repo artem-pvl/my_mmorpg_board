@@ -98,3 +98,10 @@ class ReplyEdit(UpdateView):
     model = Reply
     template_name = ''
     context_object_name = 'reply_edit'
+
+
+class ReplyDelete(LoginRequiredMixin, DeleteView):
+    model = Reply
+    template_name = 'reply_delete.html'
+    context_object_name = 'reply_delete'
+    success_url = '/board/ad/filtered'
