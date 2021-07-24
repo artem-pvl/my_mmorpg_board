@@ -1,11 +1,11 @@
 from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
     DeleteView
-from django.urls import reverse
 
 from .models import Ad, Reply
+from .filters import AdFilter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.decorators import login_required
 
 # from django.shortcuts import render
 
@@ -26,6 +26,24 @@ class AdDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['reply_list'] = Reply.objects.filter(ad_id=self.kwargs['pk'])
+        return context
+
+
+class AdFiltered(LoginRequiredMixin, ListView):
+    model = Ad
+    template_name = 'ad_filtered.html'
+    context_object_name = 'ad_filtered'
+    ordering = ['-creation_time']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = AdFilter(
+            self.request.GET,
+            queryset=Ad.objects.filter(user_id=self.request.user)
+        )
+        context['reply_list'] = Reply.objects.filter(
+            ad_id=Ad.objects.filter(user_id=self.request.user)
+        )
         return context
 
 

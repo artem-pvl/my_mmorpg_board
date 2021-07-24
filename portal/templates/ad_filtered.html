@@ -1,0 +1,69 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Мои объявления
+{% endblock title %}
+
+{% block head_title %}
+Мои объявления
+{% endblock head_title %}
+
+{% block body %}
+    <h1>Фильтр объявлений</h1>
+
+    <form method="GET">
+        {{ filter.form }}
+        <input type="submit" value="Найти">
+    </form>
+
+    <hr>
+
+    {% if filter.qs %}
+        {% for ad in filter.qs %}
+            <h3>
+                <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header|truncatechars:50 }}</a>
+            </h3>
+            <p>
+                {{ ad.category_id }}
+                {% comment %} <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header }}</a> {% endcomment %}
+            </p>
+            <p>
+                {{ ad.creation_time|date:'d.m.Y G:i' }}
+            </p>
+            <p>
+                {{ ad.ad|truncatewords:10 }}
+            </p>
+            <hr>
+            {{ reply_list }}
+            {% comment %} {% if reply_list %}
+                {% for reply in reply_list %}
+                    {% if reply.ad_id == ad.id %}
+                        <p>
+                            {{ reply.reply }}
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %} {% endcomment %}
+        {% endfor %}
+        {% comment %} {% if is_paginated %}
+            {% if page_obj.has_previous %}
+                <a href="?page=1">{% translate "First" %}</a>
+                <a href="?page={{ page_obj.previous_page_number }}"> < </a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <a>{{ num }}</a>
+                {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+                    <a href="?page={{ num }}"> {{ num }} </a>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}"> > </a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">{% translate "Last" %}</a>
+            {% endif %}
+        {% endif %} {% endcomment %}
+    {% else %}
+        <h2>Нет объявлений!</h2>
+    {% endif %}
+
+{% endblock body %}
