@@ -8,7 +8,7 @@
 {% block body %}
     <h1>Редактирование объявления</h1>
     <hr>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.media }}
         {{ form.as_p }}

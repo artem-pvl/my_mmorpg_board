@@ -29,35 +29,4 @@
     {% endif %}
     <hr>
 
-    {% if reply_list %}
-        <table>
-            <thead>
-                <tr>
-                    <td>
-                        Автор
-                    </td>
-                    <td>
-                        Время создания
-                    </td>
-                    <td>
-                        Отклик
-                    </td>
-                </tr>
-            </thead>
-            {% for reply in reply_list %}
-                <tr>
-                    <td>
-                        {{ reply.user_id.email }}
-                    </td>
-                    <td>
-                        {{ reply.creation_time|date:'d.m.Y G:i' }}
-                    </td>
-                    <td>
-                        {{ reply.reply }}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
-
 {% endblock body %}

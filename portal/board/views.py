@@ -23,12 +23,12 @@ class AdDetail(DetailView):
     template_name = "ad_detail.html"
     context_object_name = 'ad'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['reply_list'] = Reply.objects.filter(
-            ad_id=self.kwargs['pk'], is_approved=True
-        )
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['reply_list'] = Reply.objects.filter(
+    #         ad_id=self.kwargs['pk'], is_approved=True
+    #     )
+    #     return context
 
 
 class AdFiltered(LoginRequiredMixin, ListView):
@@ -45,7 +45,7 @@ class AdFiltered(LoginRequiredMixin, ListView):
         )
         context['reply_list'] = Reply.objects.filter(
             ad_id__in=Ad.objects.filter(user_id=self.request.user)
-        )
+        ).order_by('is_approved', '-creation_time')
         return context
 
 
@@ -54,7 +54,7 @@ class AdCreate(LoginRequiredMixin, CreateView):
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
     context_object_name = 'ad_create'
-    success_url = '/board/'
+    success_url = '/board/ad/'
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -66,14 +66,26 @@ class AdEdit(LoginRequiredMixin, UpdateView):
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
     context_object_name = 'ad_edit'
-    success_url = '/board/'
+    success_url = '/board/ad/'
 
 
 class AdDelete(LoginRequiredMixin, DeleteView):
     model = Ad
     template_name = 'ad_delete.html'
     context_object_name = 'ad_delete'
-    success_url = '/board/'
+    success_url = '/board/ad/'
+
+
+class ReplyList(LoginRequiredMixin, ListView):
+    model = Reply
+    template_name = 'reply_list.html'
+    context_object_name = 'reply_list'
+    ordering = ['-creation_time']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['reply_list'] = Reply.objects.filter(user_id=self.request.user)
+        return context
 
 
 class ReplyConfirmApprove(LoginRequiredMixin, DetailView):
@@ -97,7 +109,7 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
     template_name = 'reply_create.html'
     fields = ['reply']
     context_object_name = 'reply_create'
-    success_url = '/board/'
+    success_url = '/board/ad/'
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user

@@ -25,6 +25,7 @@
         <nav>
             {% if user.is_authenticated %}
                 <div><a href="{% url 'ad_filtered_view' %}">Мои объявления</a></div>
+                <div><a href="{% url 'reply_list_view' %}">Мои отзывы</a></div>
                 <div><a href="{% url 'account_email' %}">Изменить адрес почты</a></div>
                 <div><a href="{% url 'account_logout' %}">Выйти</a></div>
                 <div>{% user_display user %}</div>
