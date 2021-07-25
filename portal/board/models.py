@@ -37,5 +37,16 @@ class Reply(models.Model):
         return self.reply
 
 
+class News(models.Model):
+    user_id = models.ForeignKey(auth.get_user_model(),
+                                on_delete=models.CASCADE)
+    header = models.CharField(max_length=255)
+    news = RichTextUploadingField(default='')
+    creation_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.header
+
+
 def return_user_email(user):
     return user.email

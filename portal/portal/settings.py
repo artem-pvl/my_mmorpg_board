@@ -145,8 +145,10 @@ LOCALE_PATH = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = path.join(tempfile.gettempdir(), "ck_static")
-MEDIA_ROOT = path.join(tempfile.gettempdir(), "ck_media")
+PROJECT_PATH = path.abspath(path.dirname(__name__))
+SITE_ROOT = path.dirname(path.realpath(__file__))
+STATIC_ROOT = path.join(PROJECT_PATH, "static")
+MEDIA_ROOT = path.join(PROJECT_PATH, "media")
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -230,8 +232,8 @@ CKEDITOR_CONFIGS = {
 
 
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/board/ad/'
-LOGOUT_REDIRECT_URL = '/board/ad/'
+LOGIN_REDIRECT_URL = '/board/ad'
+LOGOUT_REDIRECT_URL = '/board/ad'
 
 
 # e-mail for sending
@@ -271,4 +273,4 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 # ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-ACCOUNT_LOGOUT_REDIRECT_URL = '/board/ad/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/board/ad'

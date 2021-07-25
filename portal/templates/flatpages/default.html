@@ -17,7 +17,8 @@
     </head>
     <body>
         <nav>
-            <div><a href="{% url 'ad_list_view' %}">Главная</a></div>
+            <div><a href="{% url 'news_list_view' %}">Новости</a></div>
+            <div><a href="{% url 'ad_list_view' %}">Объявления</a></div>
             {% if user.is_authenticated %}
                 <div><a href="{% url 'ad_create_view' %}">Новое объявление</a></div>
             {% endif %}

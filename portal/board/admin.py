@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Ad, Reply
+from .models import Category, Ad, News, Reply
 
 
 # Register your models here.
@@ -8,3 +8,4 @@ from .models import Category, Ad, Reply
 admin.site.register(Category)
 admin.site.register(Ad)
 admin.site.register(Reply)
+admin.site.register(News)

@@ -1,10 +1,11 @@
 from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
     DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,\
+    PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
-from .models import Ad, Reply
+from .models import Ad, Reply, News
 from .filters import AdFilter
 
 # from django.shortcuts import render
@@ -54,7 +55,7 @@ class AdCreate(LoginRequiredMixin, CreateView):
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
     context_object_name = 'ad_create'
-    success_url = '/board/ad/'
+    success_url = '/board/ad'
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -65,15 +66,15 @@ class AdEdit(LoginRequiredMixin, UpdateView):
     model = Ad
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
-    context_object_name = 'ad_edit'
-    success_url = '/board/ad/'
+    context_object_name = 'ad_create'
+    success_url = '/board/ad'
 
 
 class AdDelete(LoginRequiredMixin, DeleteView):
     model = Ad
     template_name = 'ad_delete.html'
     context_object_name = 'ad_delete'
-    success_url = '/board/ad/'
+    success_url = '/board/ad'
 
 
 class ReplyList(LoginRequiredMixin, ListView):
@@ -109,7 +110,7 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
     template_name = 'reply_create.html'
     fields = ['reply']
     context_object_name = 'reply_create'
-    success_url = '/board/ad/'
+    success_url = '/board/ad'
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -122,3 +123,55 @@ class ReplyDelete(LoginRequiredMixin, DeleteView):
     template_name = 'reply_delete.html'
     context_object_name = 'reply_delete'
     success_url = '/board/ad/filtered'
+
+
+class NewsList(ListView):
+    model = News
+    template_name = 'news_list.html'
+    context_object_name = 'news_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['news_editor'] = self.request.user.groups.\
+            filter(name='news_edit').exists()
+        return context
+
+
+class NewsDetail(DetailView):
+    model = News
+    template_name = 'news_detail.html'
+    context_object_name = 'news'
+
+
+class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = News
+    fields = ['header', 'news']
+    template_name = 'news_create.html'
+    context_object_name = 'news_create'
+    success_url = '/board/news/'
+    permission_required = ('board.news_editor',)
+
+    def form_valid(self, form):
+        form.instance.user_id = self.request.user
+        return super().form_valid(form)
+
+
+class NewsEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = News
+    fields = ['header', 'news']
+    template_name = 'news_create.html'
+    context_object_name = 'news_create'
+    success_url = '/board/news/'
+    permission_required = ('board.news_editor',)
+
+    def form_valid(self, form):
+        form.instance.user_id = self.request.user
+        return super().form_valid(form)
+
+
+class NewsDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = News
+    template_name = 'news_delete.html'
+    context_object_name = 'news_delete'
+    success_url = '/board/news/'
+    permission_required = ('board.news_editor',)
