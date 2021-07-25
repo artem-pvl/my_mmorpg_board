@@ -19,9 +19,6 @@
         <nav>
             <div><a href="{% url 'news_list_view' %}">Новости</a></div>
             <div><a href="{% url 'ad_list_view' %}">Объявления</a></div>
-            {% if user.is_authenticated %}
-                <div><a href="{% url 'ad_create_view' %}">Новое объявление</a></div>
-            {% endif %}
         </nav>
         <nav>
             {% if user.is_authenticated %}
@@ -37,6 +34,12 @@
         </nav>
         <nav>
             {% block menu2 %}
+                {% if news_editor %}
+                    <div><a href="{% url 'news_create_view' %}">Создать новость</a></div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <div><a href="{% url 'ad_create_view' %}">Новое объявление</a></div>
+                {% endif %}
             {% endblock menu2 %}
         </nav>
         {% block body %}

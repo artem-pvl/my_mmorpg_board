@@ -142,14 +142,26 @@ class NewsDetail(DetailView):
     template_name = 'news_detail.html'
     context_object_name = 'news'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['news_editor'] = self.request.user.groups.\
+            filter(name='news_edit').exists()
+        return context
+
 
 class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = News
     fields = ['header', 'news']
     template_name = 'news_create.html'
     context_object_name = 'news_create'
-    success_url = '/board/news/'
+    success_url = '/board/news'
     permission_required = ('board.news_editor',)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['news_editor'] = self.request.user.groups.\
+            filter(name='news_edit').exists()
+        return context
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -161,8 +173,14 @@ class NewsEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     fields = ['header', 'news']
     template_name = 'news_create.html'
     context_object_name = 'news_create'
-    success_url = '/board/news/'
+    success_url = '/board/news'
     permission_required = ('board.news_editor',)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['news_editor'] = self.request.user.groups.\
+            filter(name='news_edit').exists()
+        return context
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -173,5 +191,11 @@ class NewsDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = News
     template_name = 'news_delete.html'
     context_object_name = 'news_delete'
-    success_url = '/board/news/'
+    success_url = '/board/news'
     permission_required = ('board.news_editor',)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['news_editor'] = self.request.user.groups.\
+            filter(name='news_edit').exists()
+        return context

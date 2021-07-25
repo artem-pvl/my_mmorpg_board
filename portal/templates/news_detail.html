@@ -1,0 +1,26 @@
+{% extends 'flatpages/default.html' %}
+
+{% load account %}
+
+{% block head_title %}
+Новость
+{% endblock head_title %}
+
+{% block body %}
+    {% if news_editor %}
+        <div>
+            <button><a href="{% url 'news_edit_view' news.id %}">Редактировать</a></button>
+        </div>
+        <div>
+            <button><a href="{% url 'news_delete_view' news.id %}">Удалить</a></button>
+        </div>
+    {% endif %}
+    <hr>
+    <h1>{{ news.header }}</h1>
+
+    <h6>{{ news.creation_time|date:'d.m.Y G:i' }}</h6>
+    <p>{{ news.news|safe }}</p>
+    <h6>Автор: {{ news.user_id.email }}</h6>
+    <hr>
+
+{% endblock body %}
