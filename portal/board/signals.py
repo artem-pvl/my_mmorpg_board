@@ -44,7 +44,7 @@ def on_reply_send_mail(sender, instance, created, update_fields, **kwargs):
                 'site': site,
             }
         )
-        mail_to = instance.ad_id.user_id.email
+        mail_to = [instance.ad_id.user_id.email]
 
         send_mail.delay(mail_to, subject, txt_content, html_content)
 
@@ -83,7 +83,7 @@ def on_reply_send_mail(sender, instance, created, update_fields, **kwargs):
                     'site': site,
                 }
             )
-            mail_to = instance.user_id.email
+            mail_to = [instance.user_id.email]
 
             send_mail.delay(mail_to, subject, txt_content, html_content)
 
