@@ -13,7 +13,7 @@
             <thead>
                 <tr>
                     <td>
-                        Подтвержден
+                        Статус
                     </td>
                     <td>
                         Время создания
@@ -29,14 +29,14 @@
                 {% for reply in reply_list %}
                     <tr>
                         <td>
-                            {% if not reply.is_approved %}
+                            {% if reply.is_approved %}
                                 Подтвержден
                             {% else %}
                                 На рассмотрении
                             {% endif %}
                         </td>
                         <td>
-                            {{ reply.creation_time }}
+                            {{ reply.creation_time|date:'d.m.Y G:i' }}
                         </td>
                         <td>
                             {{ reply.reply }}

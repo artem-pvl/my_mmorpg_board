@@ -1,37 +1,18 @@
 from celery import shared_task
 
-import django.contrib.auth
-from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
-from django.utils.translation import gettext
-
-from datetime import datetime, timedelta
 
 
-# @shared_task
-# def send_mail_reply(reply, mail):
+@shared_task
+def send_mail(mail_to, mail_subject, mail_txt_content, mail_html_content):
+    msg = EmailMultiAlternatives(
+        subject=mail_subject,
+        body=mail_txt_content,
+        to=[mail_to],
+    )
+    msg.attach_alternative(mail_html_content, "text/html")
 
-#     html_content = render_to_string(
-#         'mailing.html',
-#         {
-#             'post': post,
-#             'text': post.priview(),
-#             'username': mailing["subscribers__username"],
-#         }
-#     )
-
-#     msg = EmailMultiAlternatives(
-#         subject=f'{post.header}',
-#         body=gettext(
-#             'Hello, %(name)s. New articles in your favorite category!') % {
-#                     'name': mailing["subscribers__username"]
-#                 },
-#         from_email='sf.testmail@yandex.ru',
-#         to=[mailing['subscribers__email']],
-#     )
-#     msg.attach_alternative(html_content, "text/html")
-
-#     msg.send()
+    msg.send()
 
 
 # @shared_task

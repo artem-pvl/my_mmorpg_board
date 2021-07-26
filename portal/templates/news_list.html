@@ -5,12 +5,6 @@
 {{ news_list|length }}
 {% endblock head_title %}
 
-{% block menu2 %}
-    {% if news_editor %}
-        <div><a href="{% url 'news_create_view' %}">Создать новость</a></div>
-    {% endif %}
-{% endblock menu2 %}
-
 {% block body %}
     <h1>Все новости</h1>
     <hr>

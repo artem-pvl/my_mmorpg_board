@@ -81,11 +81,11 @@ class ReplyList(LoginRequiredMixin, ListView):
     model = Reply
     template_name = 'reply_list.html'
     context_object_name = 'reply_list'
-    ordering = ['-creation_time']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['reply_list'] = Reply.objects.filter(user_id=self.request.user)
+        context['reply_list'] = Reply.objects.\
+            filter(user_id=self.request.user).order_by('-creation_time')
         return context
 
 

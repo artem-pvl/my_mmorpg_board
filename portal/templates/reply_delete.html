@@ -7,7 +7,7 @@
 {% block body %}
     <h1>Вы уверены, что хотите удалить отклик?</h1>
     <hr>
-    <p>{{ reply_delete.creation_time }}</p>
+    <p>{{ reply_delete.creation_time|date:'d.m.Y G:i' }}</p>
     <p>{{ reply_delete.reply }}</p>
     <p>{{ reply_delete.user_id.email }}</p>
     <form method="POST">
