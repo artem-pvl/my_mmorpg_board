@@ -34,7 +34,7 @@
         </nav>
         <nav>
             {% block menu2 %}
-                {% if news_editor %}
+                {% if perms.board.add_news %}
                     <div><a href="{% url 'news_create_view' %}">Создать новость</a></div>
                 {% endif %}
                 {% if user.is_authenticated %}

@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import AdFiltered, AdList, AdDetail, AdCreate, AdEdit, AdDelete,\
     ReplyCreate, ReplyDelete, ReplyConfirmApprove, ReplyList, approve_reply,\
-    NewsList, NewsDetail, NewsCreate, NewsEdit, NewsDelete
+    NewsList, NewsDetail, NewsCreate, NewsEdit, NewsDelete, news_subscribe,\
+    news_unsubscribe
 
 urlpatterns = [
     path('ad', AdList.as_view(), name='ad_list_view'),
@@ -25,4 +26,6 @@ urlpatterns = [
     path('news/<int:pk>/edit', NewsEdit.as_view(), name='news_edit_view'),
     path('news/<int:pk>/delete', NewsDelete.as_view(),
          name='news_delete_view'),
+    path('news/subscribe', news_subscribe, name='news_subscribe_button'),
+    path('news/unsubscribe', news_unsubscribe, name='news_unsubscribe_button'),
 ]

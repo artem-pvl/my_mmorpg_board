@@ -1,9 +1,10 @@
 # from django.contrib.auth import get_user_model
 from django.dispatch import receiver
 from django.template.loader import render_to_string
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.contrib.sites.models import Site
 from django.urls import reverse
+from django.contrib.auth.models import Group
 
 from .models import Reply
 from .tasks import send_mail
@@ -85,3 +86,9 @@ def on_reply_send_mail(sender, instance, created, update_fields, **kwargs):
             mail_to = instance.user_id.email
 
             send_mail.delay(mail_to, subject, txt_content, html_content)
+
+
+@receiver(post_migrate)
+def create_groups(**kwargs):
+    Group.objects.get_or_create(name='news_edit')
+    Group.objects.get_or_create(name='mailing_list')

@@ -1,4 +1,5 @@
 {% extends 'flatpages/default.html' %}
+{% load account %}
 
 {% block head_title %}
 Новости
@@ -7,8 +8,18 @@
 
 {% block body %}
     <h1>Все новости</h1>
+    {% if user.is_authenticated %}
+        {% if in_mailing_list %}
+            <div>
+                <button><a href="{% url 'news_unsubscribe_button' %}">Отписаться от рассылки новостей</a></button>
+            </div>
+        {% else %}
+            <div>
+                <button><a href="{% url 'news_subscribe_button' %}">Подписаться на рассылку новостей</a></button>
+            </div>
+        {% endif %}
+    {% endif %}
     <hr>
-
     {% if news_list %}
         <table>
             <thead>

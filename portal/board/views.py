@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin,\
     PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.urls import reverse
 
 from .models import Ad, Reply, News
 from .filters import AdFilter
@@ -23,13 +25,6 @@ class AdDetail(DetailView):
     model = Ad
     template_name = "ad_detail.html"
     context_object_name = 'ad'
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['reply_list'] = Reply.objects.filter(
-    #         ad_id=self.kwargs['pk'], is_approved=True
-    #     )
-    #     return context
 
 
 class AdFiltered(LoginRequiredMixin, ListView):
@@ -132,8 +127,9 @@ class NewsList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['news_editor'] = self.request.user.groups.\
-            filter(name='news_edit').exists()
+        context['in_mailing_list'] = self.request.user.groups.filter(
+                name='mailing_list'
+            ).exists()
         return context
 
 
@@ -144,8 +140,9 @@ class NewsDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['news_editor'] = self.request.user.groups.\
-            filter(name='news_edit').exists()
+        context['in_news_edit'] = self.request.user.groups.filter(
+                name='news_edit'
+            ).exists()
         return context
 
 
@@ -156,12 +153,6 @@ class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     context_object_name = 'news_create'
     success_url = '/board/news'
     permission_required = ('board.news_editor',)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['news_editor'] = self.request.user.groups.\
-            filter(name='news_edit').exists()
-        return context
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -176,16 +167,6 @@ class NewsEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     success_url = '/board/news'
     permission_required = ('board.news_editor',)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['news_editor'] = self.request.user.groups.\
-            filter(name='news_edit').exists()
-        return context
-
-    def form_valid(self, form):
-        form.instance.user_id = self.request.user
-        return super().form_valid(form)
-
 
 class NewsDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = News
@@ -194,8 +175,18 @@ class NewsDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     success_url = '/board/news'
     permission_required = ('board.news_editor',)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['news_editor'] = self.request.user.groups.\
-            filter(name='news_edit').exists()
-        return context
+
+@login_required
+def news_subscribe(request):
+    group, created = Group.objects.get_or_create(name='mailing_list')
+    group.user_set.add(request.user)
+
+    return redirect(reverse('news_list_view'))
+
+
+@login_required
+def news_unsubscribe(request):
+    group, created = Group.objects.get_or_create(name='mailing_list')
+    group.user_set.remove(request.user)
+
+    return redirect(reverse('news_list_view'))
