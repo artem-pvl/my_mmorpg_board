@@ -18,7 +18,7 @@ def on_reply_send_mail(sender, instance, created, update_fields, **kwargs):
 
         url = '{domain}{path}'.format(
             domain=site,
-            path=reverse('reply_list_view', urlconf='board.urls'),
+            path=reverse('reply_list_view'),
         )
 
         html_content = render_to_string(
@@ -48,6 +48,40 @@ def on_reply_send_mail(sender, instance, created, update_fields, **kwargs):
         send_mail.delay(mail_to, subject, txt_content, html_content)
 
     else:
-        print(update_fields)
-        if {'is_approved': True} in update_fields:
-            pass
+        if instance.is_approved:
+            site = 'https://{domain}'.format(
+                domain=Site.objects.get_current().domain,
+            )
+
+            url = '{domain}{path}'.format(
+                domain=site,
+                path=reverse(
+                    'ad_detail_view',
+                    args=str(instance.ad_id.id),),
+            )
+
+            html_content = render_to_string(
+                'email/mail_acceptreply.html',
+                {
+                    'reply': instance,
+                    'site': site,
+                    'url': url,
+                }
+            )
+            txt_content = render_to_string(
+                'email/mail_acceptreply.txt',
+                {
+                    'reply': instance,
+                    'site': site,
+                    'url': url,
+                }
+            )
+            subject = render_to_string(
+                'email/subject_acceptreply.txt',
+                {
+                    'site': site,
+                }
+            )
+            mail_to = instance.user_id.email
+
+            send_mail.delay(mail_to, subject, txt_content, html_content)
