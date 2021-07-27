@@ -1,14 +1,19 @@
-from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
-    DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin,\
     PermissionRequiredMixin
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.urls import reverse
+from django.template.loader import render_to_string
+
+from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
+    DeleteView
 
 from .models import Ad, Reply, News
 from .filters import AdFilter
+from .tasks import send_mail
 
 # from django.shortcuts import render
 
@@ -138,12 +143,62 @@ class NewsDetail(DetailView):
     template_name = 'news_detail.html'
     context_object_name = 'news'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['in_news_edit'] = self.request.user.groups.filter(
-                name='news_edit'
-            ).exists()
-        return context
+
+class NewsMailingConfirm(LoginRequiredMixin, PermissionRequiredMixin,
+                         DetailView):
+    model = News
+    template_name = 'news_confirm_mailing.html'
+    context_object_name = 'news'
+    permission_required = ('board.create_news',)
+
+
+@permission_required('board.create_news')
+def news_mailing_confirm(reqest, pk):
+    site = 'https://{domain}'.format(
+        domain=Site.objects.get_current().domain,
+    )
+
+    url = '{domain}{path}'.format(
+        domain=site,
+        path=reverse('news_detail_view', args=[pk]),
+    )
+
+    mailing_news = News.objects.get(id=pk)
+    mailing_users = get_user_model().objects.filter(
+        groups__name='mailing_list',
+    )
+
+    for user in mailing_users:
+        user_email = user.email
+        html_content = render_to_string(
+            'email/mail_mailing_news.html',
+            {
+                'news': mailing_news,
+                'site': site,
+                'url': url,
+                'user': user_email,
+            }
+        )
+        txt_content = render_to_string(
+            'email/mail_mailing_news.txt',
+            {
+                'news': mailing_news,
+                'site': site,
+                'url': url,
+                'user': user_email,
+            }
+        )
+        subject = render_to_string(
+            'email/subject_mailing_news.txt',
+            {
+                'site': site,
+                'news': mailing_news,
+            }
+        )
+        mail_to = [user_email]
+
+        send_mail.delay(mail_to, subject, txt_content, html_content)
+    return redirect(reverse('news_list_view'))
 
 
 class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -152,7 +207,7 @@ class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'news_create.html'
     context_object_name = 'news_create'
     success_url = '/board/news'
-    permission_required = ('board.news_editor',)
+    permission_required = ('board.create_news',)
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -165,7 +220,7 @@ class NewsEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'news_create.html'
     context_object_name = 'news_create'
     success_url = '/board/news'
-    permission_required = ('board.news_editor',)
+    permission_required = ('board.change_news',)
 
 
 class NewsDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -173,7 +228,7 @@ class NewsDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'news_delete.html'
     context_object_name = 'news_delete'
     success_url = '/board/news'
-    permission_required = ('board.news_editor',)
+    permission_required = ('board.delete_news',)
 
 
 @login_required

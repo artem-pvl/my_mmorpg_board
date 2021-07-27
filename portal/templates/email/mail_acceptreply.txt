@@ -6,7 +6,7 @@
     Дата отзыва: {{ reply.creation_time|date:'d.m.Y G:i' }}
     
     Ваш отзыв:
-    {{ reply.reply }}
+    {{ reply.reply|striptags }}
 
     Заголовок объявления:
     {{ reply.ad_id.header }}
