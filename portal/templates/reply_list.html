@@ -15,10 +15,10 @@
             <thead>
                 <tr>
                     <td>
-                        Статус
+                        Время создания
                     </td>
                     <td>
-                        Время создания
+                        Статус
                     </td>
                     <td>
                         Отзыв
@@ -31,10 +31,10 @@
                 {% for reply in page_obj %}
                     <tr>
                         <td>
-                            {{ reply.is_approved|yesno:'Подтвержден,На рассмотрении'}}
+                            {{ reply.creation_time|date:'d.m.Y G:i' }}
                         </td>
                         <td>
-                            {{ reply.creation_time|date:'d.m.Y G:i' }}
+                            {{ reply.is_approved|yesno:'Подтвержден,На рассмотрении'}}
                         </td>
                         <td>
                             {{ reply.reply }}

@@ -3,8 +3,7 @@
 {% load url_filters %}
 
 {% block head_title %}
-Объявления
-{{ ads|length }}
+Все объявления
 {% endblock head_title %}
 
 {% block body %}
@@ -16,39 +15,38 @@
             <thead>
                 <tr>
                     <td>
-                        Заголовок
-                    </td>
-                    <td>
-                        Автор
+                        Время создания
                     </td>
                     <td>
                         Категория
                     </td>
                     <td>
-                        Время создания
+                        Заголовок
                     </td>
                     <td>
                         Объявление
+                    </td>
+                    <td>
+                        Автор
                     </td>
                 </tr>
             </thead>
             {% for ad in page_obj %}
                 <tr>
                     <td>
-                        <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header|truncatechars:50 }}</a>
-                    </td>
-                    <td>
-                        {{ ad.user_id.email }}
-                    </td>
-                    <td>
-                        {{ ad.category_id }}
-                        {% comment %} <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header }}</a> {% endcomment %}
-                    </td>
-                    <td>
                         {{ ad.creation_time|date:'d.m.Y G:i' }}
                     </td>
                     <td>
+                        {{ ad.category_id }}
+                    </td>
+                    <td>
+                        <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header|truncatechars:50 }}</a>
+                    </td>
+                    <td>
                         {{ ad.ad|striptags|truncatewords:20 }}
+                    </td>
+                    <td>
+                        {{ ad.user_id.email }}
                     </td>
                 </tr>
             {% endfor %}

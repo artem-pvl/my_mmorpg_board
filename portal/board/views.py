@@ -1,7 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin,\
     PermissionRequiredMixin
-from django.core.paginator import Paginator
-from django.http import response
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
@@ -38,7 +36,6 @@ class AdDetail(DetailView):
 
 
 class AdFiltered(LoginRequiredMixin, FilterView):
-    # model = Ad
     filterset_class = AdFilter
     template_name = 'ad_filtered.html'
     context_object_name = 'ad_filtered'
@@ -46,16 +43,21 @@ class AdFiltered(LoginRequiredMixin, FilterView):
     paginate_by = 5
 
     def get_queryset(self):
-        # queryset = Ad.objects.filter(user_id=self.request.user)
-        queryset = Ad.objects.filter(user_id=self.request.user)
+        queryset = Ad.objects.filter(user_id=self.request.user).values(
+            'user_id__email',
+            'category_id__name',
+            'header',
+            'ad',
+            'id',
+            'creation_time',
+            'reply__user_id__email',
+            'reply__reply',
+            'reply__creation_time',
+            'reply__is_approved',
+            'reply__id',
+        )
+        print('qs: ', queryset)
         return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['reply_list'] = Reply.objects.filter(
-            ad_id__in=Ad.objects.filter(user_id=self.request.user)
-        ).order_by('is_approved', '-creation_time')
-        return context
 
     def form_valid(self, form):
         print(form.instance)

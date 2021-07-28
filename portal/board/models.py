@@ -16,9 +16,10 @@ class Category(models.Model):
 class Ad(models.Model):
     user_id = models.ForeignKey(auth.get_user_model(),
                                 on_delete=models.CASCADE)
-    category_id = models.ForeignKey(Category, on_delete=models.CASCADE)
-    header = models.CharField(max_length=255)
-    ad = RichTextUploadingField(default='')
+    category_id = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                    verbose_name='Категория')
+    header = models.CharField(max_length=255, verbose_name='Заголовок')
+    ad = RichTextUploadingField(default='', verbose_name='Объявление')
     creation_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -29,7 +30,7 @@ class Reply(models.Model):
     user_id = models.ForeignKey(auth.get_user_model(),
                                 on_delete=models.CASCADE)
     ad_id = models.ForeignKey(Ad, on_delete=models.CASCADE)
-    reply = models.TextField(default='')
+    reply = models.TextField(default='', verbose_name='Отклик')
     creation_time = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=False)
 
@@ -40,8 +41,8 @@ class Reply(models.Model):
 class News(models.Model):
     user_id = models.ForeignKey(auth.get_user_model(),
                                 on_delete=models.CASCADE)
-    header = models.CharField(max_length=255)
-    news = RichTextUploadingField(default='')
+    header = models.CharField(max_length=255, verbose_name='Заголовок')
+    news = RichTextUploadingField(default='', verbose_name='Новость')
     creation_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

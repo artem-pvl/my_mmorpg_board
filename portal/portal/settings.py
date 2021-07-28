@@ -193,6 +193,7 @@ CKEDITOR_CONFIGS = {
             'Flash',
             'PageBreak',
             'CreateDiv',
+            'EmbedSemantic',
         ]),
         'extraPlugins': ','.join([
             'autoembed',
