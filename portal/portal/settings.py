@@ -142,9 +142,13 @@ LOCALE_PATH = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
+
 PROJECT_PATH = path.abspath(path.dirname(__name__))
 SITE_ROOT = path.dirname(path.realpath(__file__))
-STATIC_ROOT = path.join(PROJECT_PATH, "static")
+# STATIC_ROOT = path.join(PROJECT_PATH, "static")
 MEDIA_ROOT = path.join(PROJECT_PATH, "media")
 
 STATIC_URL = '/static/'
