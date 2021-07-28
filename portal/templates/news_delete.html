@@ -29,7 +29,7 @@
                 {{ news_delete.header|truncatechars:50 }}
             </td>
             <td>
-                {{ news_delete.news|safe|truncatewords:20 }}
+                {{ news_delete.news|striptags|truncatewords:20 }}
             </td>
         </tr>
     </table>

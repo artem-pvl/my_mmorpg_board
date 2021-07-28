@@ -84,9 +84,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
-                # allauth
-                'django.template.context_processors.request',
             ],
         },
     },
@@ -161,6 +158,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CKEditor
 
+# CKEDITOR_BASEPATH = path.join(STATIC_ROOT, 'ckeditor/ckeditor/')
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_THUMBNAIL_SIZE = (300, 300)
@@ -168,72 +166,49 @@ CKEDITOR_IMAGE_QUALITY = 40
 CKEDITOR_BROWSE_SHOW_DIRS = True
 CKEDITOR_ALLOW_NONIMAGE_FILES = True
 
-CUSTOM_TOOLBAR = [
-    {
-        "name": "document",
-        "items": [
-            "Styles",
-            "Format",
-            "Bold",
-            "Italic",
-            "Underline",
-            "Strike",
-            "-",
-            "TextColor",
-            "BGColor",
-            "-",
-            "JustifyLeft",
-            "JustifyCenter",
-            "JustifyRight",
-            "JustifyBlock",
-        ],
-    },
-    {
-        "name": "widgets",
-        "items": [
-            "Undo",
-            "Redo",
-            "-",
-            "NumberedList",
-            "BulletedList",
-            "-",
-            "Outdent",
-            "Indent",
-            "-",
-            "Link",
-            "Unlink",
-            "-",
-            "Image",
-            "CodeSnippet",
-            "Table",
-            "HorizontalRule",
-            "Smiley",
-            "SpecialChar",
-            "-",
-            "Blockquote",
-            "-",
-            "ShowBlocks",
-            "Maximize",
-        ],
-    },
-]
 
 CKEDITOR_CONFIGS = {
-    "default": DEFAULT_CONFIG,
-    "my-custom-toolbar": {
-        "skin": "moono-lisa",
-        "toolbar": CUSTOM_TOOLBAR,
-        "toolbarGroups": None,
-        "extraPlugins": ",".join(["image2", "codesnippet"]),
-        "removePlugins": ",".join(["image"]),
-        "codeSnippet_theme": "xcode",
-    },
+    'default': {
+        'toolbar': 'full',
+        'removeButtons': ','.join([
+            'Save',
+            'NewPage',
+            'ExportPdf',
+            'Preview',
+            'Print',
+            'Scayt',
+            'Form',
+            'Checkbox',
+            'Radio',
+            'TextField',
+            'Textarea',
+            'Select',
+            'Button',
+            'HiddenField',
+            'Language',
+            'Flash',
+            'PageBreak',
+            'CreateDiv',
+        ]),
+        'extraPlugins': ','.join([
+            'autoembed',
+            'embed',
+            'filebrowser',
+            'image2',
+            'uploadimage',
+            'div',
+            'autolink',
+            'autogrow',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+        'embed_provider': '//iframe.ly/api/oembed?url={url}&callback={callback}&api_key=d855d8bcbd278dfa5a7487',
+    }
 }
-
-
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/board/ad'
-LOGOUT_REDIRECT_URL = '/board/ad'
 
 
 # e-mail for sending
@@ -255,6 +230,11 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 
 # allauth
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/board/ad'
+LOGOUT_REDIRECT_URL = '/board/ad'
+
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`

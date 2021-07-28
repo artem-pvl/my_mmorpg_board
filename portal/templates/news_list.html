@@ -1,5 +1,6 @@
 {% extends 'flatpages/default.html' %}
 {% load account %}
+{% load url_filters %}
 
 {% block head_title %}
 Новости
@@ -20,7 +21,7 @@
         {% endif %}
     {% endif %}
     <hr>
-    {% if news_list %}
+    {% if page_obj %}
         <table>
             <thead>
                 <tr>
@@ -38,7 +39,7 @@
                     </td>
                 </tr>
             </thead>
-            {% for news in news_list %}
+            {% for news in page_obj %}
                 <tr>
                     <td>
                         <a href="{% url 'news_detail_view' news.id %}">{{ news.header|truncatechars:50 }}</a>
@@ -50,28 +51,14 @@
                         {{ news.creation_time|date:'d.m.Y G:i' }}
                     </td>
                     <td>
-                        {{ news.news|safe|truncatewords:10 }}
+                        {{ news.news|striptags|truncatewords:10 }}
                     </td>
                 </tr>
             {% endfor %}
         </table>
-        {% comment %} {% if is_paginated %}
-            {% if page_obj.has_previous %}
-                <a href="?page=1">{% translate "First" %}</a>
-                <a href="?page={{ page_obj.previous_page_number }}"> < </a>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <a>{{ num }}</a>
-                {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
-                    <a href="?page={{ num }}"> {{ num }} </a>
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}"> > </a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">{% translate "Last" %}</a>
-            {% endif %}
-        {% endif %} {% endcomment %}
+        {% block paginator %}
+            {{ block.super }}
+        {% endblock paginator %}
     {% else %}
         <h2>Нет новостей!</h2>
     {% endif %}

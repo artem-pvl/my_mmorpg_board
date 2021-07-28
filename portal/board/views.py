@@ -1,5 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin,\
     PermissionRequiredMixin
+from django.core.paginator import Paginator
+from django.http import response
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
@@ -10,6 +12,7 @@ from django.template.loader import render_to_string
 
 from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
     DeleteView
+from django_filters.views import FilterView
 
 from .models import Ad, Reply, News
 from .filters import AdFilter
@@ -24,6 +27,8 @@ class AdList(ListView):
     model = Ad
     template_name = "ad_list.html"
     context_object_name = 'ads'
+    ordering = ['-creation_time']
+    paginate_by = 30
 
 
 class AdDetail(DetailView):
@@ -32,22 +37,24 @@ class AdDetail(DetailView):
     context_object_name = 'ad'
 
 
-class AdFiltered(LoginRequiredMixin, ListView):
-    model = Ad
+class AdFiltered(LoginRequiredMixin, FilterView):
+    # model = Ad
+    filterset_class = AdFilter
     template_name = 'ad_filtered.html'
     context_object_name = 'ad_filtered'
     ordering = ['-creation_time']
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter'] = AdFilter(
-            self.request.GET,
-            queryset=Ad.objects.filter(user_id=self.request.user)
-        )
         context['reply_list'] = Reply.objects.filter(
             ad_id__in=Ad.objects.filter(user_id=self.request.user)
         ).order_by('is_approved', '-creation_time')
         return context
+
+    def form_valid(self, form):
+        print(form.instance)
+        return super().form_valid(form)
 
 
 class AdCreate(LoginRequiredMixin, CreateView):
@@ -78,15 +85,15 @@ class AdDelete(LoginRequiredMixin, DeleteView):
 
 
 class ReplyList(LoginRequiredMixin, ListView):
-    model = Reply
     template_name = 'reply_list.html'
     context_object_name = 'reply_list'
+    ordering = ['-creation_time']
+    paginate_by = 30
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['reply_list'] = Reply.objects.\
+    def get_queryset(self):
+        queryset = Reply.objects.\
             filter(user_id=self.request.user).order_by('-creation_time')
-        return context
+        return queryset
 
 
 class ReplyConfirmApprove(LoginRequiredMixin, DetailView):
@@ -129,6 +136,8 @@ class NewsList(ListView):
     model = News
     template_name = 'news_list.html'
     context_object_name = 'news_list'
+    ordering = ['-creation_time']
+    paginate_by = 1
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

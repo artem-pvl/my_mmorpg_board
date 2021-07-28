@@ -1,5 +1,6 @@
 {% load static %}
 {% load account %}
+{% load url_filters %}
 
 <!DOCTYPE html>
 <html>
@@ -44,6 +45,25 @@
         </nav>
         {% block body %}
             {{ flatpage.content }}
+            {% block paginator %}
+                {% if is_paginated %}
+                    {% if page_obj.has_previous %}
+                        <a href="{{ request.get_full_path|add_page_tag:'1' }}">Первая</a>
+                        &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.previous_page_number }}"><<<</a>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            &nbsp;&nbsp;&nbsp;<a>{{ num }}</a>
+                        {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+                            &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:num }}">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.next_page_number }}">>>></a>
+                        &nbsp;&nbsp;&nbsp;<a href="{{ request.get_full_path|add_page_tag:page_obj.paginator.num_pages }}">Последняя</a>
+                    {% endif %}
+                {% endif %}
+            {% endblock paginator %}
         {% endblock body %}
     </body>
 </html>

@@ -16,23 +16,21 @@
         {{ filter.form }}
         <input type="submit" value="Найти">
     </form>
-
     <hr>
 
-    {% if filter.qs %}
-        {% for ad in filter.qs %}
+    {% if page_obj %}
+        {% for ad in page_obj %}
             <h3>
                 <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header|truncatechars:50 }}</a>
             </h3>
             <p>
                 {{ ad.category_id }}
-                {% comment %} <a href="{% url 'ad_detail_view' ad.id %}">{{ ad.header }}</a> {% endcomment %}
             </p>
             <p>
                 {{ ad.creation_time|date:'d.m.Y G:i' }}
             </p>
             <p>
-                {{ ad.ad|safe|truncatewords:10 }}
+                {{ ad.ad|striptags|truncatewords:70 }}
             </p>
 
             {% if reply_list %}
@@ -70,23 +68,9 @@
             {% endif %}
             <hr>
         {% endfor %}
-        {% comment %} {% if is_paginated %}
-            {% if page_obj.has_previous %}
-                <a href="?page=1">{% translate "First" %}</a>
-                <a href="?page={{ page_obj.previous_page_number }}"> < </a>
-            {% endif %}
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <a>{{ num }}</a>
-                {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
-                    <a href="?page={{ num }}"> {{ num }} </a>
-                {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}"> > </a>
-                <a href="?page={{ page_obj.paginator.num_pages }}">{% translate "Last" %}</a>
-            {% endif %}
-        {% endif %} {% endcomment %}
+        {% block paginator %}
+            {{ block.super }}
+        {% endblock paginator %}
     {% else %}
         <h2>Нет объявлений!</h2>
     {% endif %}
