@@ -16,7 +16,7 @@ import tempfile
 
 from ckeditor.configs import DEFAULT_CONFIG
 
-from .secret import EMAIL_FOR_SEND, EMAIL_FOR_SEND_PASS
+from .secret import EMAIL_FOR_SEND, EMAIL_FOR_SEND_PASS, KEY_FOR_IFRAME
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -211,7 +211,7 @@ CKEDITOR_CONFIGS = {
             'dialogui',
             'elementspath'
         ]),
-        'embed_provider': '//iframe.ly/api/oembed?url={url}&callback={callback}&api_key=d855d8bcbd278dfa5a7487',
+        'embed_provider': f'//iframe.ly/api/oembed?url={{url}}&callback={{callback}}&api_key={KEY_FOR_IFRAME}',
     }
 }
 
@@ -254,8 +254,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USER_DISPLAY = 'board.models.return_user_email'
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_LOGOUT_REDIRECT_URL = '/board/ad'

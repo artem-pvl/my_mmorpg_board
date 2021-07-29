@@ -1,25 +1,23 @@
 from django.contrib.auth.mixins import LoginRequiredMixin,\
     PermissionRequiredMixin
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.template.loader import render_to_string
-
 from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
     DeleteView
+
 from django_filters.views import FilterView
 
 from .models import Ad, Reply, News
 from .filters import AdFilter
 from .tasks import send_mail
 
-# from django.shortcuts import render
 
 # Create your views here.
-
 
 class AdList(ListView):
     model = Ad
@@ -56,12 +54,7 @@ class AdFiltered(LoginRequiredMixin, FilterView):
             'reply__is_approved',
             'reply__id',
         )
-        print('qs: ', queryset)
         return queryset
-
-    def form_valid(self, form):
-        print(form.instance)
-        return super().form_valid(form)
 
 
 class AdCreate(LoginRequiredMixin, CreateView):
@@ -69,7 +62,10 @@ class AdCreate(LoginRequiredMixin, CreateView):
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
     context_object_name = 'ad_create'
-    success_url = '/board/ad'
+
+    def get_success_url(self):
+        self.success_url = reverse('ad_list_view')
+        return super().get_success_url()
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -81,20 +77,25 @@ class AdEdit(LoginRequiredMixin, UpdateView):
     fields = ['category_id', 'header', 'ad']
     template_name = 'ad_create.html'
     context_object_name = 'ad_create'
-    success_url = '/board/ad'
+
+    def get_success_url(self):
+        self.success_url = reverse('ad_list_view')
+        return super().get_success_url()
 
 
 class AdDelete(LoginRequiredMixin, DeleteView):
     model = Ad
     template_name = 'ad_delete.html'
     context_object_name = 'ad_delete'
-    success_url = '/board/ad'
+
+    def get_success_url(self):
+        self.success_url = reverse('ad_list_view')
+        return super().get_success_url()
 
 
 class ReplyList(LoginRequiredMixin, ListView):
     template_name = 'reply_list.html'
     context_object_name = 'reply_list'
-    ordering = ['-creation_time']
     paginate_by = 30
 
     def get_queryset(self):
@@ -116,7 +117,7 @@ def approve_reply(request, pk):
         reply.is_approved = True
         reply.save()
 
-    return redirect('/board/ad/filtered')
+    return redirect(reverse('ad_filtered_view'))
 
 
 class ReplyCreate(LoginRequiredMixin, CreateView):
@@ -124,7 +125,10 @@ class ReplyCreate(LoginRequiredMixin, CreateView):
     template_name = 'reply_create.html'
     fields = ['reply']
     context_object_name = 'reply_create'
-    success_url = '/board/ad'
+
+    def get_success_url(self):
+        self.success_url = reverse('ad_list_view')
+        return super().get_success_url()
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -136,7 +140,10 @@ class ReplyDelete(LoginRequiredMixin, DeleteView):
     model = Reply
     template_name = 'reply_delete.html'
     context_object_name = 'reply_delete'
-    success_url = '/board/ad/filtered'
+
+    def get_success_url(self):
+        self.success_url = reverse('ad_filtered_view')
+        return super().get_success_url()
 
 
 class NewsList(ListView):
@@ -222,8 +229,11 @@ class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     fields = ['header', 'news']
     template_name = 'news_create.html'
     context_object_name = 'news_create'
-    success_url = '/board/news'
     permission_required = ('board.create_news',)
+
+    def get_success_url(self):
+        self.success_url = reverse('news_list_view')
+        return super().get_success_url()
 
     def form_valid(self, form):
         form.instance.user_id = self.request.user
@@ -235,16 +245,22 @@ class NewsEdit(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     fields = ['header', 'news']
     template_name = 'news_create.html'
     context_object_name = 'news_create'
-    success_url = '/board/news'
     permission_required = ('board.change_news',)
+
+    def get_success_url(self):
+        self.success_url = reverse('news_list_view')
+        return super().get_success_url()
 
 
 class NewsDelete(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = News
     template_name = 'news_delete.html'
     context_object_name = 'news_delete'
-    success_url = '/board/news'
     permission_required = ('board.delete_news',)
+
+    def get_success_url(self):
+        self.success_url = reverse('news_list_view')
+        return super().get_success_url()
 
 
 @login_required

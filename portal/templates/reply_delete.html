@@ -16,5 +16,5 @@
     </form>
     <hr>
     <p>Объявление:</p>
-    <p>{{ reply_delete.ad_id.header }}</p>
+    <p><a href="{% url 'ad_detail_view' reply_delete.ad_id.id %}">{{ reply_delete.ad_id.header }}</a></p>
 {% endblock body %}

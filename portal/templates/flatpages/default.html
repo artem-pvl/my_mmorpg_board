@@ -37,29 +37,34 @@
         </div>
     </div>
 
-    <!-- search popup end-->
-    <div class="body-overlay" id="body-overlay"></div>
-
     <!-- header start -->
     <div class="navbar-area">
-        <!-- topbar end-->
+        <!-- topbar start-->
         <div class="topbar-area">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-6 col-md-7 align-self-center">
+                        <div class="topbar-menu text-md-left text-center">
+                            <ul class="align-self-center">
+                                {% if user.is_authenticated %}
+                                    <li>{% user_display user %}</li>
+                                {% endif %}
+                            </ul>
+                        </div>
                     </div>
                     <div class="col-lg-6 col-md-5 mt-2 mt-md-0 text-md-right text-center">
-                        <div class="topbar-social">
-                            {% if user.is_authenticated %}
-                                <div class="topbar-date d-none d-lg-inline-block"><a href="{% url 'ad_filtered_view' %}">Отклики на мои объявления</a></div>
-                                <div class="topbar-date d-none d-lg-inline-block"><a href="{% url 'reply_list_view' %}">Мои отклики</a></div>
-                                <div class="topbar-date d-none d-lg-inline-block"><a href="{% url 'account_email' %}">Изменить адрес почты</a></div>
-                                <div class="topbar-date d-none d-lg-inline-block"><a href="{% url 'account_logout' %}">Выйти</a></div>
-                                <div class="social-area social-area-2">{% user_display user %}</div>
-                            {% else %}
-                                <div class="topbar-date d-none d-lg-inline-block"><a href="{% url 'account_login' %}">Войти</a></div>
-                                <div class="topbar-date d-none d-lg-inline-block"><a href="{% url 'account_signup' %}">Зарегистрироваться</a></div>
-                            {% endif %}
+                        <div class="topbar-menu text-md-rigth text-center">
+                            <ul class="align-self-center">
+                                {% if user.is_authenticated %}
+                                    <li><a href="{% url 'ad_filtered_view' %}">Отклики на мои объявления</a></li>
+                                    <li><a href="{% url 'reply_list_view' %}">Мои отклики</a></li>
+                                    <li><a href="{% url 'account_email' %}">Изменить адрес почты</a></li>
+                                    <li><a href="{% url 'account_logout' %}">Выйти</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'account_login' %}">Войти</a></li>
+                                    <li><a href="{% url 'account_signup' %}">Зарегистрироваться</a></li>
+                                {% endif %}
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -71,6 +76,16 @@
         <!-- navbar start -->
         <nav class="navbar navbar-expand-lg">
             <div class="container nav-container">
+                <div class="responsive-mobile-menu">
+                    <div class="logo d-lg-none d-block">
+                        <p class="main-logo"></p>
+                    </div>
+                    <button class="menu toggle-btn d-block d-lg-none" data-target="#nextpage_main_menu" 
+                    aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-left"></span>
+                        <span class="icon-right"></span>
+                    </button>
+                </div>
                 <div class="collapse navbar-collapse" id="nextpage_main_menu">
                     <ul class="navbar-nav menu-open">
                         <li class="current-menu-item">
@@ -95,6 +110,7 @@
                 </div>
             </div>
         </nav>
+        <!-- navbar end -->
     </div>
 
     <div style="margin: 3%;">

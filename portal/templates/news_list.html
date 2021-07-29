@@ -21,40 +21,19 @@
     {% endif %}
     <hr>
     {% if page_obj %}
-        <table>
-            <thead>
-                <tr>
-                    <td>
-                        Заголовок
-                    </td>
-                    <td>
-                        Автор
-                    </td>
-                    <td>
-                        Время создания
-                    </td>
-                    <td>
-                        Новость
-                    </td>
-                </tr>
-            </thead>
-            {% for news in page_obj %}
-                <tr>
-                    <td>
-                        <a href="{% url 'news_detail_view' news.id %}">{{ news.header|truncatechars:50 }}</a>
-                    </td>
-                    <td>
-                        {{ news.user_id.email }}
-                    </td>
-                    <td>
-                        {{ news.creation_time|date:'d.m.Y G:i' }}
-                    </td>
-                    <td>
-                        {{ news.news|striptags|truncatewords:10 }}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% for news in page_obj %}
+            <h5>
+                <a href="{% url 'news_detail_view' news.id %}">{{ news.header }}</a>
+            </h5>
+            <p>
+                {{ news.creation_time|date:'d.m.Y G:i' }}
+                автор: {{ news.user_id.email }}
+            </p>
+            <p>
+                {{ news.news|striptags|truncatewords:60 }}
+            </p>
+            <hr>
+        {% endfor %}
         {% block paginator %}
             {{ block.super }}
         {% endblock paginator %}

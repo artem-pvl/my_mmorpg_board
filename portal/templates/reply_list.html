@@ -3,27 +3,27 @@
 {% load url_filters %}
 
 {% block head_title %}
-Мои отывы
+Мои отклики
 {% endblock head_title %}
 
 {% block body %}
-    <h1>Мои отзывы</h1>
+    <h1>Мои отклики</h1>
     <hr>
 
     {% if page_obj %}
-        <table>
+        <table style='width: 100%'>
             <thead>
                 <tr>
-                    <td>
+                    <td style='width: 10%'>
                         Время создания
                     </td>
-                    <td>
+                    <td style='width: 10%'>
                         Статус
                     </td>
-                    <td>
+                    <td style='width: 60%'>
                         Отзыв
                     </td>
-                    <td>
+                    <td style='width: 20%'>
                         Объявление
                     </td>
                 </tr>
@@ -49,7 +49,7 @@
             {{ block.super }}
         {% endblock paginator %}
     {% else %}
-        <h2>Нет отзывов!</h2>
+        <h2>Нет откликов!</h2>
     {% endif %}
 
 {% endblock body %}
