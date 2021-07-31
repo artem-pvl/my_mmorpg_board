@@ -16,7 +16,8 @@ import tempfile
 
 from ckeditor.configs import DEFAULT_CONFIG
 
-from .secret import EMAIL_FOR_SEND, EMAIL_FOR_SEND_PASS, KEY_FOR_IFRAME
+from .secret import EMAIL_FOR_SEND, EMAIL_FOR_SEND_PASS, KEY_FOR_IFRAME,\
+    POSTGRESS_PASS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -97,8 +98,12 @@ WSGI_APPLICATION = 'portal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': POSTGRESS_PASS,
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
