@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
+    # REST
+    'rest_framework',
+
     'board',
     'ckeditor',
     'ckeditor_uploader',

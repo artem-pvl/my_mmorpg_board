@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AdFiltered, AdList, AdDetail, AdCreate, AdEdit, AdDelete,\
+from .views import AdFiltered, AdList, AdDetail, AdCreate, AdEdit, AdDelete, AdListApi, NewsListApi,\
     ReplyCreate, ReplyDelete, ReplyConfirmApprove, ReplyList, approve_reply,\
     NewsList, NewsDetail, NewsCreate, NewsEdit, NewsDelete, news_subscribe,\
     news_unsubscribe, NewsMailingConfirm, news_mailing_confirm
@@ -32,4 +32,6 @@ urlpatterns = [
          name='news_confirm_mailing_view'),
     path('news/<int:pk>/mailing_confirm', news_mailing_confirm,
          name='news_confirm_mailing_button'),
+    path('api/news/', NewsListApi.as_view(), name='news_list_api'),
+    path('api/ad/', AdListApi.as_view(), name='ad_list_api'),
 ]

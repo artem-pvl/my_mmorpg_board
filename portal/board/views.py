@@ -11,10 +11,16 @@ from django.views.generic import DetailView, ListView, CreateView, UpdateView,\
     DeleteView
 
 from django_filters.views import FilterView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import generics
+from rest_framework import mixins
+from rest_framework import status
 
 from .models import Ad, Reply, News
 from .filters import AdFilter
 from .tasks import send_mail
+from .serializers import AdListSerializer, NewsSerializer
 
 
 # Create your views here.
@@ -277,3 +283,18 @@ def news_unsubscribe(request):
     group.user_set.remove(request.user)
 
     return redirect(reverse('news_list_view'))
+
+
+# REST ApiViews
+
+class NewsListApi(APIView):
+
+    def get(self, request, format=None):
+        news = News.objects.all()
+        serializer = NewsSerializer(news, many=True)
+        return Response(serializer.data)
+
+
+class AdListApi(generics.ListAPIView, mixins.ListModelMixin):
+    queryset = Ad.objects.all()
+    serializer_class = AdListSerializer
