@@ -16,11 +16,13 @@ from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import mixins
 from rest_framework import status
+from rest_framework import permissions
 
 from .models import Ad, Reply, News
 from .filters import AdFilter
 from .tasks import send_mail
-from .serializers import AdListSerializer, NewsSerializer
+from .serializers import AdListSerializer, NewsSerializer,\
+    NewsDetailSerializer
 
 
 # Create your views here.
@@ -285,14 +287,25 @@ def news_unsubscribe(request):
     return redirect(reverse('news_list_view'))
 
 
-# REST ApiViews
+# REST API Views
 
-class NewsListApi(APIView):
+class NewsListApi(generics.ListAPIView, mixins.ListModelMixin):
+    queryset = News.objects.all().order_by('-creation_time')
+    serializer_class = NewsSerializer
 
-    def get(self, request, format=None):
-        news = News.objects.all()
-        serializer = NewsSerializer(news, many=True)
-        return Response(serializer.data)
+
+class NewsDetailApi(generics.RetrieveAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsDetailSerializer
+
+
+class NewsCreateApi(generics.CreateAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsDetailSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
 
 
 class AdListApi(generics.ListAPIView, mixins.ListModelMixin):
