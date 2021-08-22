@@ -308,6 +308,12 @@ class NewsCreateApi(generics.CreateAPIView):
         serializer.save(user_id=self.request.user)
 
 
+class NewsDeleteApi(generics.DestroyAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsDetailSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+
+
 class AdListApi(generics.ListAPIView, mixins.ListModelMixin):
     queryset = Ad.objects.all()
     serializer_class = AdListSerializer

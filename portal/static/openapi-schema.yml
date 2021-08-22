@@ -1,0 +1,91 @@
+openapi: 3.0.2
+info:
+  title: MMORPG board
+  description: API for MMORPG board
+  termsOfService: https:\\
+  contact:
+    name: Artem
+    email: artem.pvl@gmail.com
+  version: '0.1'
+servers:
+  - url: http://127.0.0.1:8000/board/api
+    description: development on localhost
+paths:
+  /news/:
+    get:
+      operationId: listNews
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/News'
+          description: ''
+      tags:
+      - news
+  /news/{id}/:
+    get:
+      tags:
+      - news
+      operationId: retrieveNews
+      description: ''
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: A unique integer value identifying this news.
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsDetail'
+          description: ''
+components:
+  schemas:
+    News:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        header:
+          type: string
+        creation_time:
+          type: string
+          format: date-time
+    NewsDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        header:
+          type: string
+        news:
+          type: string
+        creation_time:
+          type: string
+          format: date-time
+    AdList:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+        category_id:
+          type: string
+        header:
+          type: string
+        creation_time:
+          type: string
+          format: date-time

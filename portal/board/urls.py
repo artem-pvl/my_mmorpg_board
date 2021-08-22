@@ -1,9 +1,10 @@
 from django.urls import path
 from .views import AdFiltered, AdList, AdDetail, AdCreate, AdEdit, AdDelete,\
-     ReplyCreate, ReplyDelete, ReplyConfirmApprove, ReplyList, approve_reply,\
-     NewsList, NewsDetail, NewsCreate, NewsEdit, NewsDelete, news_subscribe,\
-     news_unsubscribe, NewsMailingConfirm, news_mailing_confirm,\
-     NewsDetailApi, AdListApi, NewsCreateApi, NewsListApi
+    ReplyCreate, ReplyDelete, ReplyConfirmApprove, ReplyList, approve_reply,\
+    NewsList, NewsDetail, NewsCreate, NewsEdit, NewsDelete, news_subscribe,\
+    news_unsubscribe, NewsMailingConfirm, news_mailing_confirm,\
+    NewsDetailApi, AdListApi, NewsCreateApi, NewsListApi
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('ad', AdList.as_view(), name='ad_list_view'),
@@ -33,6 +34,8 @@ urlpatterns = [
          name='news_confirm_mailing_view'),
     path('news/<int:pk>/mailing_confirm', news_mailing_confirm,
          name='news_confirm_mailing_button'),
+    path('swagger-ui/', TemplateView.as_view(template_name='swagger.html',
+         extra_context={'schema_url': 'openapi-schema.yml'},), name='swagger-ui'),
     path('api/news/', NewsListApi.as_view(), name='news_list_api'),
     path('api/news/<int:pk>/', NewsDetailApi.as_view(),
          name='news_detail_api'),
