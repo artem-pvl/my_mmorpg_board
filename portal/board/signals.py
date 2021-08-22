@@ -5,6 +5,9 @@ from django.db.models.signals import post_save, post_migrate
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from django.contrib.auth.models import Group
+from django.conf import settings
+
+from rest_framework.authtoken.models import Token
 
 from .models import Reply
 from .tasks import send_mail
@@ -92,3 +95,9 @@ def on_reply_send_mail(sender, instance, created, update_fields, **kwargs):
 def create_groups(**kwargs):
     Group.objects.get_or_create(name='news_edit')
     Group.objects.get_or_create(name='mailing_list')
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

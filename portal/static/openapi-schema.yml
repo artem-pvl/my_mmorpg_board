@@ -11,6 +11,23 @@ servers:
   - url: http://127.0.0.1:8000/board/api
     description: development on localhost
 paths:
+  /token_auth:
+    post:
+      operationId: getAPItoken
+      description: 'Get API token for registered user'
+      requestBody:
+        description: user credentials
+        content: 
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiToken'
+          description: ''
   /news/:
     get:
       operationId: listNews
@@ -42,6 +59,32 @@ paths:
           type: integer
       responses:
         '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsDetail'
+          description: ''
+  /news/create/:
+    post:
+      tags:
+      - news
+      operationId: addNews
+      description: 'adding new news'
+      parameters:
+      - name: header
+        required: true
+        in: query
+        description: The header of the news.
+        schema:
+          type: string
+      - name: news
+        required: true
+        in: query
+        description: The text of the news.
+        schema:
+          type: string
+      responses:
+        '201':
           content:
             application/json:
               schema:
@@ -89,3 +132,16 @@ components:
         creation_time:
           type: string
           format: date-time
+    ApiToken:
+      type: object
+      properties:
+        token:
+          type: string
+    UserId:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    
