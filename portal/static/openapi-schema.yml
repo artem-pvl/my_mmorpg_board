@@ -1,11 +1,6 @@
 openapi: 3.0.2
 info:
   title: MMORPG board
-  description: API for MMORPG board
-  termsOfService: https:\\
-  contact:
-    name: Artem
-    email: artem.pvl@gmail.com
   version: '0.1'
 servers:
   - url: http://127.0.0.1:8000/board/api
@@ -68,21 +63,27 @@ paths:
     post:
       tags:
       - news
-      operationId: addNews
       description: 'adding new news'
-      parameters:
-      - name: header
-        required: true
-        in: query
-        description: The header of the news.
-        schema:
-          type: string
-      - name: news
-        required: true
-        in: query
-        description: The text of the news.
-        schema:
-          type: string
+      operationId: addNews
+      requestBody:
+        description: news create request
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/NewsCreate'
+      # parameters:
+      # - name: header
+      #   required: true
+      #   in: query
+      #   description: The header of the news.
+      #   schema:
+      #     type: string
+      # - name: news
+      #   required: true
+      #   in: query
+      #   description: The text of the news.
+      #   schema:
+      #     type: string
       responses:
         '201':
           content:
@@ -90,6 +91,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/NewsDetail'
           description: ''
+      security:
+        - app_id: []
+      
 components:
   schemas:
     News:
@@ -104,6 +108,13 @@ components:
         creation_time:
           type: string
           format: date-time
+    NewsCreate:
+      type: object
+      properties:
+        header:
+          type: string
+        news:
+          type: string
     NewsDetail:
       type: object
       properties:
@@ -144,4 +155,11 @@ components:
           type: string
         password:
           type: string
-    
+  securitySchemes:
+    app_id:
+      type: apiKey
+      name: Authorization
+      description: API key to authorize
+      in: header
+security:
+  - app_id: []

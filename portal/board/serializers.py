@@ -12,6 +12,8 @@ class NewsSerializer(serializers.ModelSerializer):
 
 
 class NewsDetailSerializer(serializers.ModelSerializer):
+    user_id = serializers.ReadOnlyField(source='user_id.id')
+
     class Meta:
         model = News
         fields = '__all__'

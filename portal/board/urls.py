@@ -36,7 +36,8 @@ urlpatterns = [
          name='news_confirm_mailing_view'),
     path('news/<int:pk>/mailing_confirm', news_mailing_confirm,
          name='news_confirm_mailing_button'),
-    path('swagger-ui/', TemplateView.as_view(template_name='swagger.html',
+    path('swagger-ui/', TemplateView.as_view(
+         template_name='swagger/index.html',
          extra_context={'schema_url': 'openapi-schema.yml'},),
          name='swagger-ui'),
     path('api/token_auth', views.obtain_auth_token,
