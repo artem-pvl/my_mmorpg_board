@@ -19,7 +19,7 @@
                 <button><a href="{% url 'news_delete_view' news.id %}">Удалить</a></button>
             </div>
         {% endif %}
-        {% if perms.board.create_news %}
+        {% if perms.board.add_news %}
             <div>
                 <button><a href="{% url 'news_confirm_mailing_view' news.id %}">Разослать</a></button>
             </div>

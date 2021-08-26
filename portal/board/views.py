@@ -180,10 +180,10 @@ class NewsMailingConfirm(LoginRequiredMixin, PermissionRequiredMixin,
     model = News
     template_name = 'news_confirm_mailing.html'
     context_object_name = 'news'
-    permission_required = ('board.create_news',)
+    permission_required = ('board.add_news',)
 
 
-@permission_required('board.create_news')
+@permission_required('board.add_news')
 def news_mailing_confirm(reqest, pk):
     site = 'https://{domain}'.format(
         domain=Site.objects.get_current().domain,
@@ -237,7 +237,7 @@ class NewsCreate(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     fields = ['header', 'news']
     template_name = 'news_create.html'
     context_object_name = 'news_create'
-    permission_required = ('board.create_news',)
+    permission_required = ('board.add_news',)
 
     def get_success_url(self):
         self.success_url = reverse('news_list_view')

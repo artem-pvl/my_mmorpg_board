@@ -71,19 +71,6 @@ paths:
           'application/json':
             schema:
               $ref: '#/components/schemas/NewsCreate'
-      # parameters:
-      # - name: header
-      #   required: true
-      #   in: query
-      #   description: The header of the news.
-      #   schema:
-      #     type: string
-      # - name: news
-      #   required: true
-      #   in: query
-      #   description: The text of the news.
-      #   schema:
-      #     type: string
       responses:
         '201':
           content:
@@ -93,7 +80,6 @@ paths:
           description: ''
       security:
         - app_id: []
-      
 components:
   schemas:
     News:

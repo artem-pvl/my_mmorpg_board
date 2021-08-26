@@ -10,7 +10,7 @@
     <p>Вы действительно хотите разослать эту новость?</p>
     <hr>
     {% block body_top %}
-        {% if perms.board.create_news %}
+        {% if perms.board.add_news %}
             <div>
                 <button><a href="{% url 'news_confirm_mailing_button' news.id %}">Разослать</a></button>
             </div>
