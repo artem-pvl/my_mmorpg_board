@@ -184,7 +184,7 @@ class NewsMailingConfirm(LoginRequiredMixin, PermissionRequiredMixin,
 
 
 @permission_required('board.add_news')
-def news_mailing_confirm(reqest, pk):
+def news_mailing_confirm(request, pk):
     site = 'https://{domain}'.format(
         domain=Site.objects.get_current().domain,
     )
@@ -299,7 +299,26 @@ class NewsDetailApi(generics.RetrieveAPIView):
     serializer_class = NewsDetailSerializer
 
 
+class NewsMailingApi(generics.RetrieveAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsDetailSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+
+    def post(self, request, pk):
+        news_mailing_confirm(request, pk)
+        return Response(status.HTTP_200_OK)
+
+
 class NewsCreateApi(generics.CreateAPIView):
+    queryset = News.objects.all()
+    serializer_class = NewsDetailSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+
+
+class NewsEditApi(generics.UpdateAPIView):
     queryset = News.objects.all()
     serializer_class = NewsDetailSerializer
     permission_classes = [permissions.DjangoModelPermissions]

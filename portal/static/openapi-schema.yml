@@ -59,6 +59,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/NewsDetail'
           description: ''
+  /news/{id}/mailing:
+    post:
+      tags:
+      - news
+      operationId: mailingNews
+      description: 'Mailing current news'
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: A unique integer value identifying this news.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: News sended
   /news/create/:
     post:
       tags:
@@ -78,6 +94,52 @@ paths:
               schema:
                 $ref: '#/components/schemas/NewsDetail'
           description: ''
+      security:
+        - app_id: []
+  /news/{id}/edit:
+    patch:
+      tags:
+      - news
+      description: Edit news
+      operationId: updateNews
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: A unique integer value identifying this news.
+        schema:
+          type: integer
+      requestBody:
+        description: news edit request
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/NewsCreate'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsDetail'
+          description: ''
+      security:
+        - app_id: []
+  /news/{id}/delete:
+    delete:
+      tags:
+      - news
+      description: Delete news
+      operationId: deleteNews
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: A unique integer value identifying this news.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Deleted successfully
       security:
         - app_id: []
 components:
