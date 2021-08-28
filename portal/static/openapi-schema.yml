@@ -158,6 +158,58 @@ paths:
                 items:
                   $ref: '#/components/schemas/AdList'
           description: ''
+  /ad/filtered:
+    get:
+      tags:
+      - ad
+      operationId: listFilteredAd
+      description: list of my filtered ads
+      parameters:
+        - name: created_after
+          in: query
+          required: false
+          allowEmptyValue: true
+          description: Filter ad's posted after that date-time
+          schema:
+            type: string
+            format: date-time
+        - name: category
+          in: query
+          required: false
+          allowEmptyValue: true
+          description: Filter ad's on category
+          schema:
+            type: string
+        - name: header
+          in: query
+          required: false
+          allowEmptyValue: true
+          description: Filter ad's on text contained in header
+          schema:
+            type: string
+        - name: ad
+          in: query
+          required: false
+          allowEmptyValue: true
+          description: Filter ad's on text contained in ad
+          schema:
+            type: string
+        - name: order
+          in: query
+          required: false
+          allowEmptyValue: true
+          description: Order ad's by selected field
+          schema:
+            type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdList'
+          description: ''
   /ad/{id}/:
     get:
       tags:

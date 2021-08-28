@@ -21,8 +21,8 @@ from rest_framework import permissions
 from .models import Ad, Category, Reply, News
 from .filters import AdFilter
 from .tasks import send_mail
-from .serializers import AdListSerializer, NewsSerializer,\
-    NewsDetailSerializer, AdDetailSerializer, MyRepliesSerializer
+from .serializers import AdFilterSerializer, AdListSerializer, NewsSerializer,\
+    NewsDetailSerializer, AdDetailSerializer, RepliesSerializer
 
 
 # Create your views here.
@@ -371,12 +371,39 @@ class AdDeleteApi(generics.DestroyAPIView):
         return Ad.objects.filter(user_id=self.request.user)
 
 
-class AdFilteredApi(generics.ListAPIView):
-    pass
+class MyAdFilteredApi(generics.ListAPIView):
+    serializer_class = AdFilterSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = Ad.objects.filter(user_id=self.request.user)
+
+        created_after = self.request.query_params.get('created_after')
+        if created_after is not None:
+            queryset = queryset.filter(creation_time__gt=created_after)
+
+        category = self.request.query_params.get('category')
+        if category is not None:
+            queryset = queryset.filter(category_id__name=category)
+
+        header = self.request.query_params.get('header')
+        if header is not None:
+            queryset = queryset.filter(header__icontains=header)
+
+        ad = self.request.query_params.get('ad')
+        if ad is not None:
+            queryset = queryset.filter(ad__icontains=ad)
+
+        order = self.request.query_params.get('order')
+        if order in {'creation_time', '-creation_time', '-ad', 'ad', '-header',
+                     'header', 'category_id', '-category_id'}:
+            queryset = queryset.order_by(order)
+
+        return queryset
 
 
 class MyRepliesApi(generics.ListAPIView):
-    serializer_class = MyRepliesSerializer
+    serializer_class = RepliesSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):

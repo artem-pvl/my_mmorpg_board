@@ -40,7 +40,7 @@ class AdDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class MyRepliesSerializer(serializers.ModelSerializer):
+class RepliesSerializer(serializers.ModelSerializer):
     user_id = serializers.EmailField(read_only=True, source='user_id.email')
     ad_id = serializers.SlugRelatedField(
         slug_field='header',
@@ -50,3 +50,17 @@ class MyRepliesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply
         fields = '__all__'
+
+
+class AdFilterSerializer(serializers.ModelSerializer):
+    user_id = serializers.EmailField(read_only=True, source='user_id.email')
+    category_id = serializers.SlugRelatedField(
+        slug_field='name',
+        queryset=Category.objects.all()
+    )
+    reply = RepliesSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Ad
+        fields = ['user_id', 'category_id', 'header', 'creation_time',
+                  'reply']

@@ -29,7 +29,8 @@ class Ad(models.Model):
 class Reply(models.Model):
     user_id = models.ForeignKey(auth.get_user_model(),
                                 on_delete=models.CASCADE)
-    ad_id = models.ForeignKey(Ad, on_delete=models.CASCADE)
+    ad_id = models.ForeignKey(Ad, on_delete=models.CASCADE,
+                              related_name='reply')
     reply = models.TextField(default='', verbose_name='Отклик')
     creation_time = models.DateTimeField(auto_now_add=True)
     is_approved = models.BooleanField(default=False)
