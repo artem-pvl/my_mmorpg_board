@@ -12,7 +12,7 @@ class NewsSerializer(serializers.ModelSerializer):
 
 
 class NewsDetailSerializer(serializers.ModelSerializer):
-    user_id = serializers.ReadOnlyField(source='user_id.id')
+    user_id = serializers.ReadOnlyField(source='user_id.email')
 
     class Meta:
         model = News
@@ -21,8 +21,32 @@ class NewsDetailSerializer(serializers.ModelSerializer):
 
 class AdListSerializer(serializers.ModelSerializer):
     user_id = serializers.EmailField(source='user_id.email')
-    category_id = serializers.CharField(source='category_id.name')
+    category_id = serializers.StringRelatedField()
 
     class Meta:
         model = Ad
-        fields = ['id', 'user_id', 'category_id', 'header', 'creation_time']
+        exclude = ['ad']
+
+
+class AdDetailSerializer(serializers.ModelSerializer):
+    user_id = serializers.EmailField(read_only=True, source='user_id.email')
+    category_id = serializers.SlugRelatedField(
+        slug_field='name',
+        queryset=Category.objects.all()
+    )
+
+    class Meta:
+        model = Ad
+        fields = '__all__'
+
+
+class MyRepliesSerializer(serializers.ModelSerializer):
+    user_id = serializers.EmailField(read_only=True, source='user_id.email')
+    ad_id = serializers.SlugRelatedField(
+        slug_field='header',
+        queryset=Ad.objects.all()
+    )
+
+    class Meta:
+        model = Reply
+        fields = '__all__'

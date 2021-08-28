@@ -4,7 +4,8 @@ from .views import AdFiltered, AdList, AdDetail, AdCreate, AdEdit, AdDelete,\
     NewsList, NewsDetail, NewsCreate, NewsEdit, NewsDelete, news_subscribe,\
     news_unsubscribe, NewsMailingConfirm, news_mailing_confirm,\
     NewsDetailApi, AdListApi, NewsCreateApi, NewsListApi, NewsMailingApi,\
-    NewsEditApi, NewsDeleteApi
+    NewsEditApi, NewsDeleteApi, AdCreateApi, AdDetailApi, AdEditApi,\
+    AdFilteredApi, AdDeleteApi, MyRepliesApi
 from django.views.generic import TemplateView
 from rest_framework.authtoken import views
 
@@ -55,4 +56,13 @@ urlpatterns = [
     path('api/news/<int:pk>/delete', NewsDeleteApi.as_view(),
          name='news_delete_api'),
     path('api/ad/', AdListApi.as_view(), name='ad_list_api'),
+    path('api/ad/<int:pk>/', AdDetailApi.as_view(),
+         name='ad_detail_api'),
+    path('api/ad/create/', AdCreateApi.as_view(),
+         name='ad_create_api'),
+    path('api/ad/<int:pk>/edit', AdEditApi.as_view(),
+         name='ad_edit_api'),
+    path('api/ad/<int:pk>/delete', AdDeleteApi.as_view(),
+         name='ad_delete_api'),
+    path('api/reply/', MyRepliesApi.as_view(), name='reply_list_api'),
 ]

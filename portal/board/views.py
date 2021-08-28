@@ -18,11 +18,11 @@ from rest_framework import mixins
 from rest_framework import status
 from rest_framework import permissions
 
-from .models import Ad, Reply, News
+from .models import Ad, Category, Reply, News
 from .filters import AdFilter
 from .tasks import send_mail
 from .serializers import AdListSerializer, NewsSerializer,\
-    NewsDetailSerializer
+    NewsDetailSerializer, AdDetailSerializer, MyRepliesSerializer
 
 
 # Create your views here.
@@ -336,3 +336,48 @@ class NewsDeleteApi(generics.DestroyAPIView):
 class AdListApi(generics.ListAPIView, mixins.ListModelMixin):
     queryset = Ad.objects.all()
     serializer_class = AdListSerializer
+
+
+class AdDetailApi(generics.RetrieveAPIView):
+    queryset = Ad.objects.all()
+    serializer_class = AdDetailSerializer
+
+
+class AdCreateApi(generics.CreateAPIView):
+    queryset = Ad.objects.all()
+    serializer_class = AdDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+
+
+class AdEditApi(generics.UpdateAPIView):
+    serializer_class = AdDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Ad.objects.filter(user_id=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user_id=self.request.user)
+
+
+class AdDeleteApi(generics.DestroyAPIView):
+    serializer_class = AdDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Ad.objects.filter(user_id=self.request.user)
+
+
+class AdFilteredApi(generics.ListAPIView):
+    pass
+
+
+class MyRepliesApi(generics.ListAPIView):
+    serializer_class = MyRepliesSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Reply.objects.filter(user_id=self.request.user)

@@ -142,6 +142,125 @@ paths:
           description: Deleted successfully
       security:
         - app_id: []
+  /ad/:
+    get:
+      tags:
+      - ad
+      operationId: listAd
+      description: list of all ads
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdList'
+          description: ''
+  /ad/{id}/:
+    get:
+      tags:
+      - ad
+      operationId: retrieveAd
+      description: get ad with id
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: A unique integer value identifying this ad
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdDetail'
+          description: ''
+  /ad/create/:
+    post:
+      tags:
+      - ad
+      description: adding new ad
+      operationId: addAd
+      requestBody:
+        description: ad create request
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/AdCreate'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdDetail'
+          description: ad successfully created
+      security:
+        - app_id: []
+  /ad/{id}/edit:
+    patch:
+      tags:
+      - ad
+      description: Edit ad
+      operationId: updateAd
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: A unique integer value identifying this ad.
+        schema:
+          type: integer
+      requestBody:
+        description: ad edit request
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/AdCreate'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdDetail'
+          description: Ad succefffully changed
+      security:
+        - app_id: []
+  /ad/{id}/delete:
+    delete:
+      tags:
+      - ad
+      description: Delete ad
+      operationId: deleteAd
+      parameters:
+      - name: id
+        required: true
+        in: path
+        description: A unique integer value identifying this ad.
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Deleted successfully
+      security:
+        - app_id: []
+  /reply/:
+    get:
+      tags:
+      - reply
+      description: Current user replies list
+      operationId: listReply
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReplyList'
+          description: ''
 components:
   schemas:
     News:
@@ -150,7 +269,8 @@ components:
         id:
           type: integer
         user_id:
-          type: integer
+          type: string
+          format: email
         header:
           type: string
         creation_time:
@@ -169,7 +289,8 @@ components:
         id:
           type: integer
         user_id:
-          type: integer
+          type: string
+          format: email
         header:
           type: string
         news:
@@ -184,6 +305,7 @@ components:
           type: integer
         user_id:
           type: string
+          format: email
         category_id:
           type: string
         header:
@@ -191,6 +313,49 @@ components:
         creation_time:
           type: string
           format: date-time
+    AdDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+          format: email
+        category_id:
+          type: string
+        header:
+          type: string
+        ad:
+          type: string
+        creation_time:
+          type: string
+          format: date-time
+    AdCreate:
+      type: object
+      properties:
+        category_id:
+          type: string
+        header:
+          type: string
+        ad:
+          type: string
+    ReplyList:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+          format: email
+        ad_id:
+          type: string
+        reply:
+          type: string
+        creation_time:
+          type: string
+          format: date-time
+        is_approved:
+          type: boolean
     ApiToken:
       type: object
       properties:
@@ -199,8 +364,9 @@ components:
     UserId:
       type: object
       properties:
-        username:
+        user_id:
           type: string
+          format: email
         password:
           type: string
   securitySchemes:
